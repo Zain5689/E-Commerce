@@ -6,10 +6,16 @@ import { ShoppingBag, Search, User, Heart, Menu, X, Cpu, PhoneCall } from 'lucid
 import { useCartStore } from '../../lib/store/useCartStore';
 
 export const Navbar: React.FC = () => {
+  const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const toggleCart = useCartStore((state) => state.toggleCart);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   return (
     <header className="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 text-white">
@@ -76,7 +82,7 @@ export const Navbar: React.FC = () => {
           >
             <ShoppingBag className="w-5 h-5" />
             <span className="hidden sm:inline">Cart</span>
-            {totalCartItems > 0 && (
+            {mounted && totalCartItems > 0 && (
               <span className="bg-white text-brand-700 text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow">
                 {totalCartItems}
               </span>
