@@ -2,19 +2,20 @@
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-ORM-blue?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
+[![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=for-the-badge&logo=mongoose)](https://mongoosejs.com/)
 [![Redis](https://img.shields.io/badge/Redis-Cache-red?style=for-the-badge&logo=redis)](https://redis.io/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 
-Nexus Store is a high-performance, full-stack electronics retail platform designed specifically for gaming laptops, PC hardware components, graphics cards, and custom rig setups with official warranty and nationwide delivery support.
+Nexus Store is a high-performance, full-stack electronics retail platform built with Next.js App Router, Express.js, MongoDB (Mongoose ODM), and Redis.
 
 ---
 
 ## ✨ Features
 
 - 🎮 **Modern Gaming Hardware Storefront**: High-converting, responsive UI with glassmorphism aesthetics and custom micro-animations.
-- 🌳 **Dynamic Multi-Level Category Tree**: Unlimited nested subcategories (e.g. `Laptops > Gaming Laptops`) powered by recursive database relations.
+- 🌳 **Dynamic Multi-Level Category Tree**: Unlimited nested subcategories (e.g. `Laptops > Gaming Laptops`) powered by MongoDB document relations.
 - ⚙️ **Specification-Based Dynamic Filters**: Filter products dynamically by technical specifications (e.g., RAM Capacity, GPU Model, Processor Type).
 - 🏷️ **Product Variant System**: Multi-attribute variant management (e.g., 1TB vs 2TB SSD, Color choices) with individual SKU tracking and stock management.
 - 🌍 **Internationalization (i18n)**: Full English (LTR) and Arabic (RTL) support with localized routing.
@@ -35,8 +36,8 @@ Nexus Store is a high-performance, full-stack electronics retail platform design
 ### **Backend (`/backend`)**
 - **Runtime**: Node.js & TypeScript
 - **Framework**: Express.js
-- **Database**: PostgreSQL
-- **ORM**: Prisma ORM
+- **Database**: MongoDB
+- **ODM**: Mongoose
 - **Cache**: Redis
 - **Security**: JWT authentication, bcryptjs, CORS, input validation
 
