@@ -1,0 +1,25 @@
+'use client';
+
+import React from 'react';
+import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { useTranslations } from '../../lib/data/translations';
+
+export const Footer: React.FC = () => {
+  const language = useLanguageStore((state) => state.language);
+  const t = useTranslations(language);
+
+  return (
+    <footer className="bg-[#0f172a] border-t border-slate-800 py-10 px-4 text-center text-xs text-slate-500">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>{t.footerCopyright}</p>
+        <div className="flex items-center gap-6 text-slate-400">
+          <span>{t.footerWarranty}</span>
+          <span>•</span>
+          <span>{t.footerDelivery}</span>
+          <span>•</span>
+          <span>{t.footerPayments}</span>
+        </div>
+      </div>
+    </footer>
+  );
+};

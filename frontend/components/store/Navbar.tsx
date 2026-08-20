@@ -1,21 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Search, User, Heart, Menu, X, Cpu, PhoneCall } from 'lucide-react';
+import { ShoppingBag, Search, User, Heart, Menu, X, Cpu, PhoneCall, Globe } from 'lucide-react';
 import { useCartStore } from '../../lib/store/useCartStore';
+import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { useTranslations } from '../../lib/data/translations';
 
 export const Navbar: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const toggleCart = useCartStore((state) => state.toggleCart);
 
-  React.useEffect(() => {
+  const { language, toggleLanguage, isArabic } = useLanguageStore();
+  const t = useTranslations(language);
+
+  useEffect(() => {
     setMounted(true);
   }, []);
-
 
   return (
     <header className="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 text-white">
@@ -23,21 +28,31 @@ export const Navbar: React.FC = () => {
       <div className="bg-brand-900/60 border-b border-brand-700/40 py-1.5 px-4 text-xs font-medium flex justify-between items-center text-slate-300">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5 text-brand-400">
-            <PhoneCall className="w-3.5 h-3.5" /> Hotline: <strong className="text-white">19999</strong>
+            <PhoneCall className="w-3.5 h-3.5" /> {t.hotline} <strong className="text-white font-mono">{t.hotlineNumber}</strong>
           </span>
-          <span className="hidden sm:inline text-slate-400">| Premium Gaming Laptops & PC Components</span>
+          <span className="hidden md:inline text-slate-400">| {t.topBannerTag}</span>
         </div>
         <div className="flex items-center gap-3">
-          <button className="hover:text-white transition-colors">العربية (AR)</button>
-          <span>|</span>
-          <Link href="/track-order" className="hover:text-white transition-colors">Track Order</Link>
+          {/* Language Switcher */}
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 border border-slate-700 hover:border-brand-500 text-white font-bold transition-all text-xs active:scale-95 shadow-sm"
+            title="تبديل اللغة / Switch Language"
+          >
+            <Globe className="w-3.5 h-3.5 text-brand-400" />
+            <span>{t.languageToggle}</span>
+          </button>
+          <span className="text-slate-600">|</span>
+          <Link href="/track-order" className="hover:text-white transition-colors">
+            {t.trackOrder}
+          </Link>
         </div>
       </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-rose-500 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
             <Cpu className="w-6 h-6 text-white" />
           </div>
@@ -45,7 +60,9 @@ export const Navbar: React.FC = () => {
             <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
               NEXUS<span className="text-brand-500">STORE</span>
             </span>
-            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold -mt-1">Hardware & Tech</span>
+            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold -mt-1">
+              {isArabic ? 'متجر الهاردوير والكمبيوتر' : 'Hardware & Tech'}
+            </span>
           </div>
         </Link>
 
@@ -54,25 +71,38 @@ export const Navbar: React.FC = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search RTX 4090, Gaming Laptops, DDR5 RAM..."
+              placeholder={t.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl py-2.5 pl-4 pr-11 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+              className={`w-full bg-slate-900/80 border border-slate-700/80 rounded-xl py-2.5 ${
+                isArabic ? 'pr-4 pl-12' : 'pl-4 pr-12'
+              } text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all`}
             />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white hover:bg-brand-500 transition-colors">
+            <button
+              className={`absolute ${
+                isArabic ? 'left-2' : 'right-2'
+              } top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white hover:bg-brand-500 transition-colors`}
+            >
               <Search className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
-          <Link href="/account" className="hidden sm:flex items-center gap-2 text-slate-300 hover:text-white transition-colors p-2">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link
+            href="/account"
+            className="hidden sm:flex items-center gap-2 text-slate-300 hover:text-white transition-colors p-2"
+          >
             <User className="w-5 h-5" />
-            <span className="text-xs font-medium hidden lg:inline">Sign In</span>
+            <span className="text-xs font-medium hidden lg:inline">{t.signIn}</span>
           </Link>
 
-          <Link href="/wishlist" className="relative p-2 text-slate-300 hover:text-white transition-colors">
+          <Link
+            href="/wishlist"
+            className="relative p-2 text-slate-300 hover:text-white transition-colors"
+            title={t.wishlist}
+          >
             <Heart className="w-5 h-5" />
           </Link>
 
@@ -81,7 +111,7 @@ export const Navbar: React.FC = () => {
             className="relative flex items-center gap-2.5 bg-brand-600/90 hover:bg-brand-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-brand-600/20 active:scale-95"
           >
             <ShoppingBag className="w-5 h-5" />
-            <span className="hidden sm:inline">Cart</span>
+            <span className="hidden sm:inline">{t.cart}</span>
             {mounted && totalCartItems > 0 && (
               <span className="bg-white text-brand-700 text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow">
                 {totalCartItems}
@@ -102,25 +132,101 @@ export const Navbar: React.FC = () => {
       <nav className="hidden md:block bg-slate-900/60 border-t border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-8 py-2 text-xs font-semibold text-slate-300">
           <Link href="/category/laptops" className="hover:text-brand-400 transition-colors flex items-center gap-1.5">
-            Laptops & Notebooks
+            {t.navCategories.laptops}
           </Link>
           <Link href="/category/pc-components" className="hover:text-brand-400 transition-colors">
-            PC Components
+            {t.navCategories.pcComponents}
           </Link>
           <Link href="/category/gpus" className="hover:text-brand-400 transition-colors text-rose-400 font-bold">
-            🔥 Graphics Cards (RTX)
+            {t.navCategories.gpus}
           </Link>
           <Link href="/category/ram-memory" className="hover:text-brand-400 transition-colors">
-            RAM & Storage
+            {t.navCategories.ramMemory}
           </Link>
           <Link href="/category/monitors" className="hover:text-brand-400 transition-colors">
-            Monitors & Displays
+            {t.navCategories.monitors}
           </Link>
-          <Link href="/deals" className="hover:text-amber-400 transition-colors text-amber-400 font-bold ml-auto">
-            ⚡ Flash Deals
+          <Link
+            href="/deals"
+            className={`hover:text-amber-400 transition-colors text-amber-400 font-bold ${
+              isArabic ? 'mr-auto' : 'ml-auto'
+            }`}
+          >
+            {t.navCategories.flashDeals}
           </Link>
         </div>
       </nav>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-4 space-y-3">
+          <div className="relative mb-3">
+            <input
+              type="text"
+              placeholder={t.searchPlaceholder}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-4 text-xs text-slate-200"
+            />
+          </div>
+          <div className="flex flex-col space-y-2 text-sm font-medium">
+            <Link
+              href="/category/laptops"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-slate-200"
+            >
+              {t.navCategories.laptops}
+            </Link>
+            <Link
+              href="/category/pc-components"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-slate-200"
+            >
+              {t.navCategories.pcComponents}
+            </Link>
+            <Link
+              href="/category/gpus"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-rose-400 font-bold"
+            >
+              {t.navCategories.gpus}
+            </Link>
+            <Link
+              href="/category/ram-memory"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-slate-200"
+            >
+              {t.navCategories.ramMemory}
+            </Link>
+            <Link
+              href="/category/monitors"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-slate-200"
+            >
+              {t.navCategories.monitors}
+            </Link>
+            <Link
+              href="/deals"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-slate-800 text-amber-400 font-bold"
+            >
+              {t.navCategories.flashDeals}
+            </Link>
+            <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+              <button
+                onClick={() => {
+                  toggleLanguage();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 text-xs text-brand-400 font-bold py-1"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{t.languageToggle}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

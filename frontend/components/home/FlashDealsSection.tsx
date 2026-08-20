@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Zap, Timer } from 'lucide-react';
 import { FLASH_DEALS } from '../../lib/data/homeData';
 import { ProductCard } from '../store/ProductCard';
+import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { useTranslations } from '../../lib/data/translations';
 
 function useCountdown(targetHours = 6) {
   const [timeLeft, setTimeLeft] = useState({ h: targetHours, m: 0, s: 0 });
@@ -28,6 +30,8 @@ function useCountdown(targetHours = 6) {
 
 export const FlashDealsSection: React.FC = () => {
   const { h, m, s } = useCountdown(5);
+  const { language } = useLanguageStore();
+  const t = useTranslations(language);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
@@ -39,24 +43,26 @@ export const FlashDealsSection: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">⚡ Flash Deals</h2>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                {t.flashDealsHeader}
+              </h2>
               <span className="text-xs font-bold bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">
-                LIMITED
+                {t.flashDealsBadge}
               </span>
             </div>
-            <p className="text-xs text-slate-400">أسعار مجنونة بس على عدد محدود</p>
+            <p className="text-xs text-slate-400">{t.flashDealsSubheader}</p>
           </div>
         </div>
 
         {/* Countdown Timer */}
         <div className="flex items-center gap-2">
           <Timer className="w-4 h-4 text-slate-400" />
-          <span className="text-xs text-slate-400 font-medium">Ends in:</span>
+          <span className="text-xs text-slate-400 font-medium">{t.endsIn}</span>
           <div className="flex items-center gap-1 font-mono font-black text-sm">
             {[
-              { val: h, label: 'H' },
-              { val: m, label: 'M' },
-              { val: s, label: 'S' },
+              { val: h, label: t.hoursLabel },
+              { val: m, label: t.minutesLabel },
+              { val: s, label: t.secondsLabel },
             ].map(({ val, label }, idx) => (
               <React.Fragment key={label}>
                 {idx > 0 && <span className="text-brand-500">:</span>}
@@ -73,7 +79,7 @@ export const FlashDealsSection: React.FC = () => {
           href="/deals"
           className="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 transition-colors sm:ml-0 ml-auto"
         >
-          All Deals →
+          {t.allDealsBtn}
         </Link>
       </div>
 

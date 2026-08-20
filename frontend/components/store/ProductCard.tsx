@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { ShoppingCart, Star, Check, Heart, Eye } from 'lucide-react';
+import { ShoppingCart, Star, Check, Heart } from 'lucide-react';
 import { Product } from '../../lib/data/homeData';
 import { useCartStore } from '../../lib/store/useCartStore';
+import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { useTranslations } from '../../lib/data/translations';
 
 interface ProductCardProps {
   product: Product;
@@ -16,12 +17,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   const [added, setAdded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  const { language, isArabic } = useLanguageStore();
+  const t = useTranslations(language);
+
+  const productName = isArabic && product.nameAr ? product.nameAr : product.name;
+  const productSpecs = isArabic && product.specsAr ? product.specsAr : product.specs;
+  const productBadge = isArabic && product.badgeAr ? product.badgeAr : product.badge;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
       productId: product.id,
-      name: product.name,
+      name: productName,
       price: product.price,
       image: product.image,
       quantity: 1,
@@ -42,21 +50,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         <div className="relative h-48 sm:h-52 w-full rounded-xl overflow-hidden bg-slate-950/80">
           <img
             src={product.image}
-            alt={product.name}
+            alt={productName}
             className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
             loading="lazy"
           />
 
           {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+          <div className={`absolute top-2 ${isArabic ? 'right-2' : 'left-2'} flex flex-col gap-1 z-10`}>
             {discountPercent > 0 && (
               <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md uppercase tracking-wider">
                 -{discountPercent}%
               </span>
             )}
-            {product.badge && (
+            {productBadge && (
               <span className="bg-brand-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md">
-                {product.badge}
+                {productBadge}
               </span>
             )}
           </div>
@@ -67,8 +75,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
               e.preventDefault();
               setIsWishlisted(!isWishlisted);
             }}
-            className="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 transition-colors z-10"
-            title="Add to Wishlist"
+            className={`absolute top-2 ${
+              isArabic ? 'left-2' : 'right-2'
+            } p-1.5 rounded-lg bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 transition-colors z-10`}
+            title={t.wishlist}
           >
             <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
@@ -83,11 +93,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
           )}
 
           <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors">
-            {product.name}
+            {productName}
           </h3>
 
           <p className="text-[11px] text-slate-400 line-clamp-1">
-            {product.specs}
+            {productSpecs}
           </p>
 
           {/* Rating */}
@@ -105,15 +115,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
               ))}
             </div>
             <span className="font-bold text-slate-300 text-[11px]">{product.rating}</span>
-            <span className="text-[10px] text-slate-500">({product.reviewsCount})</span>
+            <span className="text-[10px] text-slate-500">
+              ({product.reviewsCount} {t.reviewsCountSuffix})
+            </span>
           </div>
 
           {/* Sold Progress for Deals */}
           {showProgress && product.stockCount && product.soldCount && (
             <div className="pt-2 space-y-1">
               <div className="flex justify-between text-[11px] text-slate-400 font-medium">
-                <span>Sold: <strong className="text-slate-200">{product.soldCount}</strong></span>
-                <span>Available: <strong className="text-brand-400">{product.stockCount - product.soldCount}</strong></span>
+                <span>
+                  {t.soldLabel} <strong className="text-slate-200">{product.soldCount}</strong>
+                </span>
+                <span>
+                  {t.availableLabel}{' '}
+                  <strong className="text-brand-400">{product.stockCount - product.soldCount}</strong>
+                </span>
               </div>
               <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
@@ -131,11 +148,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         <div>
           {product.originalPrice > product.price && (
             <span className="text-xs line-through text-slate-500 block leading-tight">
-              {product.originalPrice.toLocaleString()} EGP
+              {product.originalPrice.toLocaleString()} {t.currency}
             </span>
           )}
           <span className="text-base sm:text-lg font-black text-white bg-gradient-to-r from-white to-slate-200 bg-clip-text">
-            {product.price.toLocaleString()} <span className="text-xs font-bold text-brand-400">EGP</span>
+            {product.price.toLocaleString()}{' '}
+            <span className="text-xs font-bold text-brand-400">{t.currency}</span>
           </span>
         </div>
 
@@ -147,15 +165,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
               ? 'bg-emerald-600 text-white'
               : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-600/20'
           }`}
-          title="Add to Cart"
+          title={t.buyBtn}
         >
           {added ? (
             <>
-              <Check className="w-3.5 h-3.5" /> Added
+              <Check className="w-3.5 h-3.5" /> {t.addedBtn}
             </>
           ) : (
             <>
-              <ShoppingCart className="w-3.5 h-3.5" /> Buy
+              <ShoppingCart className="w-3.5 h-3.5" /> {t.buyBtn}
             </>
           )}
         </button>

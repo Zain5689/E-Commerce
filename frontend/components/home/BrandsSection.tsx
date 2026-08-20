@@ -1,14 +1,21 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { TOP_BRANDS } from '../../lib/data/homeData';
+import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { useTranslations } from '../../lib/data/translations';
 
 export const BrandsSection: React.FC = () => {
+  const { language, isArabic } = useLanguageStore();
+  const t = useTranslations(language);
+
   return (
     <section className="bg-[#0d1526] border-y border-slate-800/60 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
         <div className="text-center space-y-1">
-          <h2 className="text-xl font-black text-white">Official Brand Partners</h2>
-          <p className="text-xs text-slate-400">كل المنتجات وكالات رسمية بضمان معتمد</p>
+          <h2 className="text-xl font-black text-white">{t.brandsHeader}</h2>
+          <p className="text-xs text-slate-400">{t.brandsSubheader}</p>
         </div>
         <div className="flex flex-wrap justify-center items-center gap-3">
           {TOP_BRANDS.map((brand) => (
@@ -21,7 +28,7 @@ export const BrandsSection: React.FC = () => {
                 {brand.logo}
               </span>
               <span className="text-[10px] text-slate-500 mt-0.5 group-hover:text-slate-400 transition-colors text-center leading-tight">
-                {brand.tagline}
+                {isArabic ? brand.taglineAr : brand.tagline}
               </span>
             </Link>
           ))}

@@ -1,20 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-en: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-ar: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+}
+
+[lang="ar"] body,
+html[dir="rtl"] body {
+  font-family: var(--font-ar);
+}
+
+[lang="en"] body,
+html[dir="ltr"] body {
+  font-family: var(--font-en);
 }
 
 body {
   background-color: #0b0f19;
   color: #f8fafc;
-  font-family: var(--font-sans);
+  font-family: var(--font-ar), var(--font-en);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: #0f172a;
