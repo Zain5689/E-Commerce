@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Search, User, Heart, Menu, X, Cpu, PhoneCall, Globe } from 'lucide-react';
 import { useCartStore } from '../../lib/store/useCartStore';
+import { useWishlistStore } from '../../lib/store/useWishlistStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 
@@ -14,6 +15,7 @@ export const Navbar: React.FC = () => {
   
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const toggleCart = useCartStore((state) => state.toggleCart);
+  const totalWishlistItems = useWishlistStore((state) => state.getTotalItems());
 
   const { language, toggleLanguage, isArabic } = useLanguageStore();
   const t = useTranslations(language);
@@ -43,7 +45,7 @@ export const Navbar: React.FC = () => {
             <span>{t.languageToggle}</span>
           </button>
           <span className="text-slate-600">|</span>
-          <Link href="/track-order" className="hover:text-white transition-colors">
+          <Link href="/account" className="hover:text-white transition-colors">
             {t.trackOrder}
           </Link>
         </div>
@@ -92,23 +94,30 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-3 sm:gap-4">
           <Link
             href="/account"
-            className="hidden sm:flex items-center gap-2 text-slate-300 hover:text-white transition-colors p-2"
+            className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors p-2 rounded-xl hover:bg-slate-800/60"
+            title={t.myAccount}
           >
-            <User className="w-5 h-5" />
+            <User className="w-5 h-5 text-slate-300" />
             <span className="text-xs font-medium hidden lg:inline">{t.signIn}</span>
           </Link>
 
           <Link
             href="/wishlist"
-            className="relative p-2 text-slate-300 hover:text-white transition-colors"
+            className="relative p-2 text-slate-300 hover:text-white transition-colors rounded-xl hover:bg-slate-800/60"
             title={t.wishlist}
           >
             <Heart className="w-5 h-5" />
+            {mounted && totalWishlistItems > 0 && (
+              <span className="absolute top-0.5 right-0.5 bg-rose-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-lg shadow-rose-500/40 animate-pulse">
+                {totalWishlistItems}
+              </span>
+            )}
           </Link>
 
           <button
             onClick={() => toggleCart(true)}
             className="relative flex items-center gap-2.5 bg-brand-600/90 hover:bg-brand-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-brand-600/20 active:scale-95"
+            title={t.cart}
           >
             <ShoppingBag className="w-5 h-5" />
             <span className="hidden sm:inline">{t.cart}</span>
@@ -212,15 +221,22 @@ export const Navbar: React.FC = () => {
             >
               {t.navCategories.flashDeals}
             </Link>
-            <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+            <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+              <Link
+                href="/account"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-xs text-slate-300 hover:text-white"
+              >
+                {t.signIn}
+              </Link>
               <button
                 onClick={() => {
                   toggleLanguage();
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-2 text-xs text-brand-400 font-bold py-1"
+                className="flex items-center gap-1.5 text-xs text-brand-400 font-bold py-1"
               >
-                <Globe className="w-4 h-4" />
+                <Globe className="w-3.5 h-3.5" />
                 <span>{t.languageToggle}</span>
               </button>
             </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { ShoppingCart, Star, Check, Heart } from 'lucide-react';
 import { Product } from '../../lib/data/homeData';
 import { useCartStore } from '../../lib/store/useCartStore';
+import { useWishlistStore } from '../../lib/store/useWishlistStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 
@@ -14,8 +15,10 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress }) => {
   const addItem = useCartStore((state) => state.addItem);
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist(product.id));
+  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
+
   const [added, setAdded] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const { language, isArabic } = useLanguageStore();
   const t = useTranslations(language);
@@ -37,6 +40,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
+  };
+
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
   };
 
   const discountPercent = Math.round(
@@ -71,16 +80,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
 
           {/* Wishlist Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsWishlisted(!isWishlisted);
-            }}
+            onClick={handleWishlistToggle}
             className={`absolute top-2 ${
               isArabic ? 'left-2' : 'right-2'
-            } p-1.5 rounded-lg bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 transition-colors z-10`}
-            title={t.wishlist}
+            } p-2 rounded-xl backdrop-blur-md transition-all z-10 ${
+              isInWishlist
+                ? 'bg-rose-500/20 text-rose-500 border border-rose-500/40 shadow-lg shadow-rose-500/20'
+                : 'bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 border border-slate-700/50'
+            }`}
+            title={isInWishlist ? t.removeFromWishlist : t.wishlist}
           >
-            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
         </div>
 
@@ -160,9 +170,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         <button
           onClick={handleAddToCart}
           disabled={added}
-          className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-md ${
+          className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-md ${
             added
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-emerald-600 text-white shadow-emerald-600/30'
               : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-600/20'
           }`}
           title={t.buyBtn}

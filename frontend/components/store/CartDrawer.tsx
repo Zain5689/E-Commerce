@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useCartStore } from '../../lib/store/useCartStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
@@ -126,6 +127,14 @@ export const CartDrawer: React.FC = () => {
               </div>
 
               <div className="space-y-2">
+                <Link
+                  href="/cart"
+                  onClick={() => toggleCart(false)}
+                  className="w-full bg-[#1e293b] hover:bg-[#334155] border border-slate-700 text-slate-100 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-xs"
+                >
+                  <ShoppingBag className="w-4 h-4 text-brand-400" />
+                  {t.viewFullCart}
+                </Link>
                 <button
                   onClick={() => alert(isArabic ? 'جاري الانتقال لصفحة إتمام الطلب...' : 'Proceeding to Checkout...')}
                   className="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-brand-600/30 flex items-center justify-center gap-2 text-sm active:scale-98"
