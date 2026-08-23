@@ -17,6 +17,7 @@ export const TRANSLATIONS = {
       rose: 'أحمر قرمزي نيون',
     },
     trackOrder: 'تتبع طلبك',
+    searchPlaceholder: 'ابحث عن كروت RTX 4090، لابتوبات ألعاب، رامات DDR5...',
     signIn: 'تسجيل الدخول',
     myAccount: 'حسابي',
     wishlist: 'المفضلة',
