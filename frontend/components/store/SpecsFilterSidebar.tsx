@@ -64,14 +64,14 @@ export const SpecsFilterSidebar: React.FC<SpecsFilterSidebarProps> = ({
   };
 
   return (
-    <aside className="w-full lg:w-64 bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md">
-      <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
-        <div className="flex items-center gap-2 font-bold text-slate-100 text-sm">
-          <Filter className="w-4 h-4 text-brand-500" /> {t.filterTitle}
+    <aside className="w-full lg:w-64 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm dark:shadow-none backdrop-blur-md transition-colors">
+      <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-slate-100 text-sm">
+          <Filter className="w-4 h-4 text-brand-600 dark:text-brand-500" /> {t.filterTitle}
         </div>
         <button
           onClick={handleReset}
-          className="text-xs text-slate-400 hover:text-brand-400 flex items-center gap-1 transition-colors"
+          className="text-xs text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 flex items-center gap-1 transition-colors"
         >
           <RotateCcw className="w-3 h-3" /> {t.resetFilter}
         </button>
@@ -79,12 +79,12 @@ export const SpecsFilterSidebar: React.FC<SpecsFilterSidebarProps> = ({
 
       {/* Condition Filter */}
       <div className="mb-6">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">
           {t.conditionHeader}
         </h4>
         <div className="space-y-2 text-sm">
           {['NEW', 'USED', 'REFURBISHED'].map((cond) => (
-            <label key={cond} className="flex items-center gap-2.5 text-slate-300 hover:text-white cursor-pointer select-none">
+            <label key={cond} className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={selectedConditions.includes(cond)}
@@ -94,7 +94,7 @@ export const SpecsFilterSidebar: React.FC<SpecsFilterSidebarProps> = ({
                     : [...selectedConditions, cond];
                   setSelectedConditions(updated);
                 }}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-brand-600 focus:ring-brand-500"
+                className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-brand-600 focus:ring-brand-500"
               />
               <span className="text-xs font-medium">{getConditionLabel(cond)}</span>
             </label>
@@ -104,21 +104,21 @@ export const SpecsFilterSidebar: React.FC<SpecsFilterSidebarProps> = ({
 
       {/* Dynamic Specification Keys (RAM, GPU, CPU, etc.) */}
       {specFilters.map((spec) => (
-        <div key={spec.key} className="mb-6 pb-4 border-b border-slate-800/60">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+        <div key={spec.key} className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-800/60">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5 flex items-center justify-between">
             {isArabic && spec.nameAr ? spec.nameAr : spec.nameEn}
-            <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
           </h4>
           <div className="space-y-2 text-sm">
             {spec.options.map((option) => {
               const checked = selectedSpecs[spec.key]?.includes(option) || false;
               return (
-                <label key={option} className="flex items-center gap-2.5 text-slate-300 hover:text-white cursor-pointer select-none">
+                <label key={option} className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={checked}
                     onChange={() => handleSpecToggle(spec.key, option)}
-                    className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-brand-600 focus:ring-brand-500"
+                    className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-brand-600 focus:ring-brand-500"
                   />
                   <span className="text-xs">{option}</span>
                 </label>

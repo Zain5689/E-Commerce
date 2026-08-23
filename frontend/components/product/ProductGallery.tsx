@@ -53,13 +53,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
   return (
     <div className="space-y-4 select-none">
       {/* Main Image Frame with Ambient Glow */}
-      <div className="relative group rounded-3xl p-1 bg-gradient-to-b from-brand-500/20 via-slate-800/40 to-slate-900/60 shadow-2xl">
-        <div className="relative rounded-[22px] overflow-hidden bg-gradient-to-b from-[#0e1628] to-[#080d1a] border border-slate-800/80 p-4 sm:p-6">
+      <div className="relative group rounded-3xl p-1 bg-slate-200/60 dark:bg-gradient-to-b dark:from-brand-500/20 dark:via-slate-800/40 dark:to-slate-900/60 shadow-lg dark:shadow-2xl transition-colors">
+        <div className="relative rounded-[22px] overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#0e1628] dark:to-[#080d1a] border border-slate-200 dark:border-slate-800/80 p-4 sm:p-6 transition-colors">
           {/* Radial Center Highlight behind the device */}
           <div className="absolute inset-0 bg-radial-gradient from-brand-600/10 via-purple-600/5 to-transparent pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
 
           <div
-            className="relative h-[340px] sm:h-[420px] md:h-[460px] w-full rounded-2xl overflow-hidden bg-slate-950/60 flex items-center justify-center cursor-crosshair border border-slate-800/50"
+            className="relative h-[340px] sm:h-[420px] md:h-[460px] w-full rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-950/60 flex items-center justify-center cursor-crosshair border border-slate-200 dark:border-slate-800/50"
             onMouseEnter={() => setIsHoverZooming(true)}
             onMouseLeave={() => setIsHoverZooming(false)}
             onMouseMove={handleMouseMove}
@@ -79,7 +79,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
             <img
               src={currentImage}
               alt={productName}
-              className={`w-full h-full object-contain p-4 drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] transition-all duration-300 ${
+              className={`w-full h-full object-contain p-4 drop-shadow-[0_15px_30px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] transition-all duration-300 ${
                 isHoverZooming ? 'opacity-0' : 'opacity-100 scale-100 group-hover:scale-105'
               }`}
             />
@@ -87,7 +87,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
             {/* Badges Overlay */}
             <div className={`absolute top-3 ${isArabic ? 'right-3' : 'left-3'} flex flex-col gap-2 z-10 pointer-events-none`}>
               {discountPercent > 0 && (
-                <span className="bg-gradient-to-r from-rose-600 via-brand-600 to-pink-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-xl shadow-rose-950/60 uppercase tracking-wider flex items-center gap-1.5 border border-rose-400/40">
+                <span className="bg-gradient-to-r from-rose-600 via-brand-600 to-pink-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase tracking-wider flex items-center gap-1.5 border border-rose-400/40">
                   <Sparkles className="w-3.5 h-3.5 animate-pulse text-amber-300" />
                   <span>-{discountPercent}% OFF</span>
                 </span>
@@ -104,10 +104,10 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
               {/* Wishlist Button */}
               <button
                 onClick={() => toggleWishlist(product)}
-                className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-lg active:scale-95 border ${
+                className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-md active:scale-95 border ${
                   isInWishlist
-                    ? 'bg-rose-500/25 text-rose-400 border-rose-500/60 shadow-rose-500/30'
-                    : 'bg-slate-900/85 text-slate-300 hover:text-rose-400 hover:bg-slate-850 border-slate-700/60'
+                    ? 'bg-rose-500/20 text-rose-500 border-rose-500/50 shadow-rose-500/20'
+                    : 'bg-white/90 dark:bg-slate-900/85 text-slate-600 dark:text-slate-300 hover:text-rose-500 dark:hover:text-rose-400 border-slate-200 dark:border-slate-700/60'
                 }`}
                 title={isInWishlist ? t.removeFromWishlist : t.wishlist}
               >
@@ -117,20 +117,20 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
               {/* Share Button */}
               <button
                 onClick={handleShare}
-                className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-lg active:scale-95 border ${
+                className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-md active:scale-95 border ${
                   copied
-                    ? 'bg-emerald-500/25 text-emerald-400 border-emerald-500/60'
-                    : 'bg-slate-900/85 text-slate-300 hover:text-brand-400 hover:bg-slate-850 border-slate-700/60'
+                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/50'
+                    : 'bg-white/90 dark:bg-slate-900/85 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 border-slate-200 dark:border-slate-700/60'
                 }`}
                 title={t.productDetails?.shareProduct || 'Share Product'}
               >
-                {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" /> : <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />}
+                {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" /> : <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
 
               {/* Fullscreen Modal Trigger */}
               <button
                 onClick={() => setIsZoomModalOpen(true)}
-                className="p-2.5 rounded-2xl bg-slate-900/85 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 backdrop-blur-md transition-all shadow-lg active:scale-95"
+                className="p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700/60 backdrop-blur-md transition-all shadow-md active:scale-95"
                 title="Fullscreen Zoom"
               >
                 <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -145,8 +145,8 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
             )}
 
             {/* Zoom hint badge at bottom */}
-            <div className="absolute bottom-3 right-3 text-[11px] text-slate-400 bg-slate-900/85 border border-slate-700/60 px-3 py-1 rounded-xl backdrop-blur pointer-events-none hidden sm:flex items-center gap-1.5 shadow-md">
-              <ZoomIn className="w-3.5 h-3.5 text-brand-400" />
+            <div className="absolute bottom-3 right-3 text-[11px] text-slate-500 dark:text-slate-400 bg-white/90 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-700/60 px-3 py-1 rounded-xl backdrop-blur pointer-events-none hidden sm:flex items-center gap-1.5 shadow-sm">
+              <ZoomIn className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
               <span>{isArabic ? 'مرر المؤشر للتكبير' : 'Hover to inspect'}</span>
             </div>
           </div>
@@ -162,10 +162,10 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
               <button
                 key={index}
                 onClick={() => setActiveIndex(index)}
-                className={`relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#0d1424] transition-all p-2 ${
+                className={`relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-white dark:bg-[#0d1424] transition-all p-2 ${
                   isSelected
-                    ? 'border-2 border-brand-500 ring-4 ring-brand-500/20 shadow-xl shadow-brand-500/20 scale-105 bg-[#121c33]'
-                    : 'border border-slate-800 hover:border-slate-700 opacity-70 hover:opacity-100'
+                    ? 'border-2 border-brand-500 ring-4 ring-brand-500/20 shadow-md scale-105 bg-brand-50/50 dark:bg-[#121c33]'
+                    : 'border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 opacity-70 hover:opacity-100'
                 }`}
               >
                 <img
@@ -181,29 +181,29 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
 
       {/* Mini Assurances below Gallery */}
       <div className="grid grid-cols-2 gap-3 pt-1">
-        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-brand-950/30 to-purple-950/20 border border-brand-500/20 shadow-sm">
-          <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 flex-shrink-0">
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-brand-50/80 dark:bg-gradient-to-r dark:from-brand-950/30 dark:to-purple-950/20 border border-brand-200 dark:border-brand-500/20 shadow-sm transition-colors">
+          <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-600 dark:text-brand-400 flex-shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div className="text-[11px] leading-tight">
-            <span className="font-bold text-slate-200 block">
+            <span className="font-bold text-slate-800 dark:text-slate-200 block">
               {product.category === 'used' ? (isArabic ? 'فحص شامل 100%' : '100% Tested') : (isArabic ? 'ضمان رسمي معتمد' : 'Official Warranty')}
             </span>
-            <span className="text-brand-300/80 text-[10px] font-medium">
+            <span className="text-brand-600 dark:text-brand-300/80 text-[10px] font-medium">
               {product.warrantyPeriodAr && isArabic ? product.warrantyPeriodAr : product.warrantyPeriod || '2 Years Warranty'}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-teal-950/20 border border-emerald-500/20 shadow-sm">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-emerald-50/80 dark:bg-gradient-to-r dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-500/20 shadow-sm transition-colors">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
             <Truck className="w-5 h-5" />
           </div>
           <div className="text-[11px] leading-tight">
-            <span className="font-bold text-slate-200 block">
+            <span className="font-bold text-slate-800 dark:text-slate-200 block">
               {isArabic ? 'شحن فوري ومؤمن' : 'Express Delivery'}
             </span>
-            <span className="text-emerald-300/80 text-[10px] font-medium">
+            <span className="text-emerald-600 dark:text-emerald-300/80 text-[10px] font-medium">
               {isArabic ? 'توصيل خلال 24-48 ساعة' : '24 - 48h Nationwide'}
             </span>
           </div>

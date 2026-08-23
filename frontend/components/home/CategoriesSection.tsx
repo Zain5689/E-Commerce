@@ -8,14 +8,7 @@ import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Laptop,
-  Cpu,
-  Zap,
-  Tv,
-  ShieldCheck,
-  Headphones,
-  HardDrive,
-  Camera,
+  Laptop, Cpu, Zap, Tv, ShieldCheck, Headphones, HardDrive, Camera,
 };
 
 export const CategoriesSection: React.FC = () => {
@@ -27,16 +20,16 @@ export const CategoriesSection: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
             {t.categoriesHeader}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {t.categoriesSubheader}
           </p>
         </div>
         <Link
           href="/category/all"
-          className="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 transition-colors"
+          className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 flex items-center gap-1 transition-colors"
         >
           {t.allCategoriesBtn}
         </Link>
@@ -50,22 +43,22 @@ export const CategoriesSection: React.FC = () => {
             <Link
               key={cat.id}
               href={`/category/${cat.slug}`}
-              className="group flex flex-col items-center text-center gap-2 p-3 rounded-2xl bg-[#131b2e] border border-slate-800/80 hover:border-brand-500/50 hover:bg-[#162138] transition-all duration-200 cursor-pointer"
+              className="group flex flex-col items-center text-center gap-2 p-3 rounded-2xl bg-white dark:bg-[#131b2e] border border-slate-200 dark:border-slate-800/80 hover:border-brand-400 dark:hover:border-brand-500/50 hover:bg-brand-50 dark:hover:bg-[#162138] shadow-sm dark:shadow-none hover:shadow-md transition-all duration-200 cursor-pointer"
             >
               {/* Icon Box */}
-              <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-700/60 group-hover:border-brand-500/60 flex items-center justify-center transition-all group-hover:bg-brand-500/10 relative overflow-hidden">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 group-hover:border-brand-400 dark:group-hover:border-brand-500/60 flex items-center justify-center transition-all group-hover:bg-brand-100 dark:group-hover:bg-brand-500/10 relative overflow-hidden">
                 <img
                   src={cat.image}
                   alt={isArabic ? cat.titleAr : cat.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity"
+                  className="absolute inset-0 w-full h-full object-cover opacity-20 dark:opacity-30 group-hover:opacity-30 dark:group-hover:opacity-40 transition-opacity"
                 />
-                <Icon className="w-5 h-5 text-brand-400 relative z-10 group-hover:text-brand-300" />
+                <Icon className="w-5 h-5 text-brand-600 dark:text-brand-400 relative z-10 group-hover:text-brand-500 dark:group-hover:text-brand-300" />
               </div>
               <div>
-                <p className="text-[11px] font-bold text-slate-200 leading-tight group-hover:text-brand-300 transition-colors line-clamp-2">
+                <p className="text-[11px] font-bold text-slate-700 dark:text-slate-200 leading-tight group-hover:text-brand-700 dark:group-hover:text-brand-300 transition-colors line-clamp-2">
                   {isArabic ? cat.titleAr : cat.title}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-0.5 hidden sm:block">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 hidden sm:block">
                   {isArabic ? cat.itemCountAr : cat.itemCount}
                 </p>
               </div>
