@@ -51,18 +51,18 @@ export const StickyMobileBar: React.FC<StickyMobileBarProps> = ({ product }) => 
   };
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-[#0b0f19]/95 border-t border-slate-800 p-3 backdrop-blur-lg shadow-2xl transition-transform duration-300 md:hidden animate-slide-up">
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0b0f19]/95 border-t border-slate-200 dark:border-slate-800 p-3 backdrop-blur-lg shadow-2xl transition-all duration-300 md:hidden animate-slide-up">
       <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
         {/* Mini Preview */}
         <div className="flex items-center gap-3 min-w-0">
           <img
             src={product.image}
             alt={productName}
-            className="w-12 h-12 rounded-xl object-contain bg-slate-950 p-1 border border-slate-800 flex-shrink-0"
+            className="w-12 h-12 rounded-xl object-contain bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 flex-shrink-0"
           />
           <div className="min-w-0">
-            <h4 className="text-xs font-bold text-white truncate">{productName}</h4>
-            <div className="text-sm font-black text-brand-400 font-mono">
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{productName}</h4>
+            <div className="text-sm font-black text-brand-600 dark:text-brand-400 font-mono">
               {product.price.toLocaleString()} <span className="text-[10px] font-normal">{t.currency}</span>
             </div>
           </div>
