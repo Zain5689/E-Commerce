@@ -9,17 +9,17 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#fff1f3',
-          100: '#ffe4e8',
-          200: '#fecdd6',
-          300: '#fda4b5',
-          400: '#fb718d',
-          500: '#f43f66',
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337',
-          950: '#4c0519',
+          50: 'rgb(var(--color-brand-50, 37 99 235) / <alpha-value>)',
+          100: 'rgb(var(--color-brand-100, 219 234 254) / <alpha-value>)',
+          200: 'rgb(var(--color-brand-200, 191 219 254) / <alpha-value>)',
+          300: 'rgb(var(--color-brand-300, 147 197 253) / <alpha-value>)',
+          400: 'rgb(var(--color-brand-400, 96 165 250) / <alpha-value>)',
+          500: 'rgb(var(--color-brand-500, 59 130 246) / <alpha-value>)',
+          600: 'rgb(var(--color-brand-600, 37 99 235) / <alpha-value>)',
+          700: 'rgb(var(--color-brand-700, 29 78 216) / <alpha-value>)',
+          800: 'rgb(var(--color-brand-800, 30 64 175) / <alpha-value>)',
+          900: 'rgb(var(--color-brand-900, 30 58 138) / <alpha-value>)',
+          950: 'rgb(var(--color-brand-950, 23 37 84) / <alpha-value>)',
         },
         cyber: {
           cyan: '#06b6d4',

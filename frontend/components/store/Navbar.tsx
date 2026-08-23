@@ -8,6 +8,7 @@ import { useWishlistStore } from '../../lib/store/useWishlistStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useThemeStore } from '../../lib/store/useThemeStore';
 import { useTranslations } from '../../lib/data/translations';
+import { ColorThemePicker } from './ColorThemePicker';
 
 export const Navbar: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -36,7 +37,10 @@ export const Navbar: React.FC = () => {
           </span>
           <span className="hidden md:inline text-slate-500 dark:text-slate-400">| {t.topBannerTag}</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Color Theme Switcher */}
+          <ColorThemePicker />
+
           {/* Language Switcher */}
           <button
             onClick={toggleLanguage}
@@ -83,7 +87,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-rose-500 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
             <Cpu className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -258,6 +262,9 @@ export const Navbar: React.FC = () => {
                 {t.signIn}
               </Link>
               <div className="flex items-center gap-2">
+                {/* Color theme in mobile */}
+                <ColorThemePicker />
+
                 {/* Theme toggle in mobile */}
                 <button
                   onClick={toggleTheme}

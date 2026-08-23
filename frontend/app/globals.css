@@ -4,9 +4,106 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+html[data-color-theme="blue"],
+:root:not([data-color-theme]) {
   --font-en: 'Inter', system-ui, -apple-system, sans-serif;
   --font-ar: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+
+  /* Blue Theme (Default) */
+  --color-brand-50: 239 246 255;
+  --color-brand-100: 219 234 254;
+  --color-brand-200: 191 219 254;
+  --color-brand-300: 147 197 253;
+  --color-brand-400: 96 165 250;
+  --color-brand-500: 59 130 246;
+  --color-brand-600: 37 99 235;
+  --color-brand-700: 29 78 216;
+  --color-brand-800: 30 64 175;
+  --color-brand-900: 30 58 138;
+  --color-brand-950: 23 37 84;
+  --brand-rgb: 37, 99, 235;
+  --brand-light-rgb: 59, 130, 246;
+}
+
+html[data-color-theme="purple"] {
+  --color-brand-50: 250 245 255;
+  --color-brand-100: 243 232 255;
+  --color-brand-200: 233 213 255;
+  --color-brand-300: 216 180 254;
+  --color-brand-400: 192 132 252;
+  --color-brand-500: 168 85 247;
+  --color-brand-600: 147 51 234;
+  --color-brand-700: 126 34 206;
+  --color-brand-800: 107 33 168;
+  --color-brand-900: 88 28 135;
+  --color-brand-950: 59 7 100;
+  --brand-rgb: 147, 51, 234;
+  --brand-light-rgb: 168, 85, 247;
+}
+
+html[data-color-theme="emerald"] {
+  --color-brand-50: 236 253 245;
+  --color-brand-100: 209 250 229;
+  --color-brand-200: 167 243 208;
+  --color-brand-300: 110 231 183;
+  --color-brand-400: 52 211 153;
+  --color-brand-500: 16 185 129;
+  --color-brand-600: 5 150 105;
+  --color-brand-700: 4 120 87;
+  --color-brand-800: 6 95 70;
+  --color-brand-900: 6 78 59;
+  --color-brand-950: 2 44 34;
+  --brand-rgb: 5, 150, 105;
+  --brand-light-rgb: 16, 185, 129;
+}
+
+html[data-color-theme="cyan"] {
+  --color-brand-50: 236 254 255;
+  --color-brand-100: 207 250 254;
+  --color-brand-200: 165 243 252;
+  --color-brand-300: 103 232 249;
+  --color-brand-400: 34 211 238;
+  --color-brand-500: 6 182 212;
+  --color-brand-600: 8 145 178;
+  --color-brand-700: 14 116 144;
+  --color-brand-800: 21 94 117;
+  --color-brand-900: 22 78 99;
+  --color-brand-950: 8 51 68;
+  --brand-rgb: 8, 145, 178;
+  --brand-light-rgb: 6, 182, 212;
+}
+
+html[data-color-theme="amber"] {
+  --color-brand-50: 255 251 235;
+  --color-brand-100: 254 243 199;
+  --color-brand-200: 253 230 138;
+  --color-brand-300: 252 211 77;
+  --color-brand-400: 251 191 36;
+  --color-brand-500: 245 158 11;
+  --color-brand-600: 217 119 6;
+  --color-brand-700: 180 83 9;
+  --color-brand-800: 146 64 14;
+  --color-brand-900: 120 53 15;
+  --color-brand-950: 69 26 3;
+  --brand-rgb: 217, 119, 6;
+  --brand-light-rgb: 245, 158, 11;
+}
+
+html[data-color-theme="rose"] {
+  --color-brand-50: 255 241 243;
+  --color-brand-100: 255 228 232;
+  --color-brand-200: 254 205 214;
+  --color-brand-300: 253 164 181;
+  --color-brand-400: 251 113 141;
+  --color-brand-500: 244 63 94;
+  --color-brand-600: 225 29 72;
+  --color-brand-700: 190 18 60;
+  --color-brand-800: 159 18 57;
+  --color-brand-900: 136 19 55;
+  --color-brand-950: 76 5 25;
+  --brand-rgb: 225, 29, 72;
+  --brand-light-rgb: 244, 63, 94;
 }
 
 [lang="ar"] body,
@@ -23,7 +120,7 @@ html[dir="ltr"] body {
 body {
   background-color: #080c14;
   background-image:
-    radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.09) 0px, transparent 55%),
+    radial-gradient(at 0% 0%, rgba(var(--brand-rgb), 0.12) 0px, transparent 55%),
     radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 55%),
     radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 55%);
   background-attachment: fixed;
@@ -37,7 +134,7 @@ html.light body,
 :root:not(.dark) body {
   background-color: #f0f4fa;
   background-image:
-    radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.05) 0px, transparent 55%),
+    radial-gradient(at 0% 0%, rgba(var(--brand-rgb), 0.07) 0px, transparent 55%),
     radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.04) 0px, transparent 55%),
     radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.04) 0px, transparent 55%);
   background-attachment: fixed;
@@ -67,18 +164,18 @@ html.light .glass-panel,
 
 .dark .glass-panel-hover:hover {
   background: rgba(19, 28, 51, 0.85);
-  border-color: rgba(225, 29, 72, 0.35);
-  box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.15);
+  border-color: rgba(var(--brand-rgb), 0.4);
+  box-shadow: 0 10px 30px -10px rgba(var(--brand-rgb), 0.2);
 }
 
 html.light .glass-panel-hover:hover {
   background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(225, 29, 72, 0.25);
-  box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.1);
+  border-color: rgba(var(--brand-rgb), 0.3);
+  box-shadow: 0 10px 30px -10px rgba(var(--brand-rgb), 0.12);
 }
 
 .glow-brand {
-  box-shadow: 0 0 25px -5px rgba(225, 29, 72, 0.4);
+  box-shadow: 0 0 25px -5px rgba(var(--brand-rgb), 0.45);
 }
 
 .glow-cyan {
@@ -90,13 +187,13 @@ html.light .glass-panel-hover:hover {
 }
 
 .cyber-text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #f43f5e 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, rgb(var(--color-brand-400)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 html.light .cyber-text-gradient {
-  background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #e11d48 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #334155 50%, rgb(var(--color-brand-600)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

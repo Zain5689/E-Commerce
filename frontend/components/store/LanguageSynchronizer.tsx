@@ -7,7 +7,7 @@ import { useThemeStore } from '../../lib/store/useThemeStore';
 export const LanguageSynchronizer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const language = useLanguageStore((state) => state.language);
   const isArabic = language === 'ar';
-  const theme = useThemeStore((state) => state.theme);
+  const { theme, colorTheme } = useThemeStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -23,8 +23,12 @@ export const LanguageSynchronizer: React.FC<{ children: React.ReactNode }> = ({ 
         document.documentElement.classList.remove('dark');
         document.documentElement.classList.add('light');
       }
+
+      if (colorTheme) {
+        document.documentElement.setAttribute('data-color-theme', colorTheme);
+      }
     }
-  }, [language, isArabic, theme]);
+  }, [language, isArabic, theme, colorTheme]);
 
   return (
     <div
