@@ -19,7 +19,7 @@ export const TrustBadgesSection: React.FC = () => {
   const t = useTranslations(language);
 
   return (
-    <section className="bg-[#0d1526] border-y border-slate-800/60 py-8">
+    <section className="bg-slate-100 dark:bg-[#0d1526] border-y border-slate-200 dark:border-slate-800/60 py-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {t.trustBadges.map((badge) => {
@@ -28,7 +28,7 @@ export const TrustBadgesSection: React.FC = () => {
             return (
               <div
                 key={badge.id}
-                className="flex flex-col items-center text-center gap-2 p-4 rounded-2xl border border-slate-800/40 hover:border-slate-700/60 transition-colors group"
+                className="flex flex-col items-center text-center gap-2 p-4 rounded-2xl border border-slate-200 dark:border-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700/60 bg-white dark:bg-transparent hover:shadow-sm transition-all group"
               >
                 <div
                   className={`w-12 h-12 rounded-xl border flex items-center justify-center ${style.bg} group-hover:scale-110 transition-transform`}
@@ -36,8 +36,8 @@ export const TrustBadgesSection: React.FC = () => {
                   <Icon className={`w-5 h-5 ${style.color}`} />
                 </div>
                 <div>
-                  <p className="text-xs font-black text-white">{badge.title}</p>
-                  <p className="text-[10px] text-slate-400 leading-tight mt-0.5">{badge.desc}</p>
+                  <p className="text-xs font-black text-slate-900 dark:text-white">{badge.title}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mt-0.5">{badge.desc}</p>
                 </div>
               </div>
             );

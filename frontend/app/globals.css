@@ -19,33 +19,62 @@ html[dir="ltr"] body {
   font-family: var(--font-en);
 }
 
+/* ───── DARK MODE (default) ───── */
 body {
   background-color: #080c14;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.09) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 55%),
+    radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 55%);
   background-attachment: fixed;
   color: #f8fafc;
   font-family: var(--font-ar), var(--font-en);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Glassmorphism & Cyber Card Effects */
-.glass-panel {
+/* ───── LIGHT MODE ───── */
+html.light body,
+:root:not(.dark) body {
+  background-color: #f0f4fa;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.05) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.04) 0px, transparent 55%),
+    radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.04) 0px, transparent 55%);
+  background-attachment: fixed;
+  color: #0f172a;
+}
+
+/* Glassmorphism – DARK */
+.dark .glass-panel {
   background: rgba(14, 21, 38, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(30, 45, 77, 0.7);
 }
 
+/* Glassmorphism – LIGHT */
+html.light .glass-panel,
+:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
 .glass-panel-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-panel-hover:hover {
+.dark .glass-panel-hover:hover {
   background: rgba(19, 28, 51, 0.85);
   border-color: rgba(225, 29, 72, 0.35);
   box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.15);
+}
+
+html.light .glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(225, 29, 72, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.1);
 }
 
 .glow-brand {
@@ -66,26 +95,60 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+html.light .cyber-text-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #e11d48 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .gold-text-gradient {
   background: linear-gradient(135deg, #fef08a 0%, #fbbf24 50%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar – DARK */
+.dark ::-webkit-scrollbar,
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+.dark ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
   background: #080c14;
 }
+.dark ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
   background: #1e2d4d;
   border-radius: 9999px;
   border: 2px solid #080c14;
 }
+.dark ::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
   background: #334e80;
 }
 
+/* Custom Scrollbar – LIGHT */
+html.light ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+  border: 2px solid #e2e8f0;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Theme transition for all elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+/* Prevent transition on images */
+img, svg, video {
+  transition: none !important;
+}

@@ -43,14 +43,14 @@ export const FlashDealsSection: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                 {t.flashDealsHeader}
               </h2>
               <span className="text-xs font-bold bg-rose-600 text-white px-2 py-0.5 rounded-md animate-pulse">
                 {t.flashDealsBadge}
               </span>
             </div>
-            <p className="text-xs text-slate-400">{t.flashDealsSubheader}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{t.flashDealsSubheader}</p>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ export const FlashDealsSection: React.FC = () => {
             ].map(({ val, label }, idx) => (
               <React.Fragment key={label}>
                 {idx > 0 && <span className="text-brand-500">:</span>}
-                <div className="bg-[#131b2e] border border-slate-700 text-white px-2 py-1 rounded-lg min-w-[36px] text-center">
+                <div className="bg-slate-100 dark:bg-[#131b2e] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white px-2 py-1 rounded-lg min-w-[36px] text-center">
                   {String(val).padStart(2, '0')}
                   <span className="text-[8px] font-normal text-slate-500 block -mt-0.5">{label}</span>
                 </div>

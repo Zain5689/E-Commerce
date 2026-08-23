@@ -35,10 +35,10 @@ export const FeaturedProductsSection: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
             {t.featuredHeader}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">{t.featuredSubheader}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t.featuredSubheader}</p>
         </div>
         <Link
           href="/category/all"
@@ -60,7 +60,7 @@ export const FeaturedProductsSection: React.FC = () => {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 activeTab === tab.id
                   ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'bg-[#131b2e] text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700'
+                  : 'bg-slate-100 dark:bg-[#131b2e] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />

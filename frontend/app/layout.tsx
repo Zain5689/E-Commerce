@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl">
-      <body className="min-h-screen flex flex-col bg-[#0b0f19] text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+    <html lang="ar" dir="rtl" className="dark">
+      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-[#080c14] dark:text-slate-100 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
         <LanguageSynchronizer>
           <Navbar />
           <CartDrawer />

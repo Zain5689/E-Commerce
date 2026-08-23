@@ -55,10 +55,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   );
 
   return (
-    <div className="group relative bg-[#0e1526]/90 hover:bg-[#121c33] border border-slate-800/80 hover:border-brand-500/50 rounded-3xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-2xl hover:shadow-brand-950/30 hover:-translate-y-1">
+    <div className="group relative bg-white dark:bg-[#0e1526]/90 hover:bg-slate-50 dark:hover:bg-[#121c33] border border-slate-200 dark:border-slate-800/80 hover:border-brand-300 dark:hover:border-brand-500/50 rounded-3xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-lg dark:hover:shadow-2xl dark:hover:shadow-brand-950/30 hover:-translate-y-1">
       {/* Badges and Quick Actions */}
       <div className="relative">
-        <Link href={productUrl} className="block relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-slate-950/90 border border-slate-800/50">
+        <Link href={productUrl} className="block relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800/50">
           <img
             src={product.image}
             alt={productName}
@@ -113,12 +113,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
           )}
 
           <Link href={productUrl} className="block">
-            <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors leading-snug">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors leading-snug">
               {productName}
             </h3>
           </Link>
 
-          <p className="text-[11px] text-slate-400 line-clamp-1">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
             {productSpecs}
           </p>
 
@@ -166,14 +166,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
       </div>
 
       {/* Pricing & Add to Cart */}
-      <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+      <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-2">
         <Link href={productUrl} className="block">
           {product.originalPrice > product.price && (
             <span className="text-xs line-through text-slate-500 block leading-tight font-mono">
               {product.originalPrice.toLocaleString()} {t.currency}
             </span>
           )}
-          <span className="text-base sm:text-lg font-black text-white font-mono">
+          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono">
             {product.price.toLocaleString()}{' '}
             <span className="text-xs font-bold text-brand-400">{t.currency}</span>
           </span>
