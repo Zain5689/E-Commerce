@@ -97,7 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
           } p-2 rounded-xl backdrop-blur-md transition-all z-10 ${
             isInWishlist
               ? 'bg-rose-500/20 text-rose-500 border border-rose-500/40 shadow-lg shadow-rose-500/20'
-              : 'bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 border border-slate-700/50'
+              : 'bg-white/90 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 shadow-sm'
           }`}
           title={isInWishlist ? t.removeFromWishlist : t.wishlist}
         >
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         {/* Product Info */}
         <div className="pt-3.5 space-y-1.5">
           {product.brand && (
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-400 block">
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-600 dark:text-brand-400 block">
               {product.brand}
             </span>
           )}
@@ -131,13 +131,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
                   className={`w-3 h-3 ${
                     i < Math.floor(product.rating)
                       ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(245,158,11,0.3)]'
-                      : 'text-slate-700'
+                      : 'text-slate-300 dark:text-slate-700'
                   }`}
                 />
               ))}
             </div>
-            <span className="font-extrabold text-slate-300 text-[11px] font-mono">{product.rating}</span>
-            <span className="text-[10px] text-slate-500">
+            <span className="font-extrabold text-slate-700 dark:text-slate-300 text-[11px] font-mono">{product.rating}</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500">
               ({product.reviewsCount})
             </span>
           </div>
@@ -145,16 +145,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
           {/* Sold Progress for Deals */}
           {showProgress && product.stockCount && product.soldCount && (
             <div className="pt-2 space-y-1">
-              <div className="flex justify-between text-[11px] text-slate-400 font-medium">
+              <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                 <span>
-                  {t.soldLabel} <strong className="text-slate-200">{product.soldCount}</strong>
+                  {t.soldLabel} <strong className="text-slate-800 dark:text-slate-200">{product.soldCount}</strong>
                 </span>
                 <span>
                   {t.availableLabel}{' '}
-                  <strong className="text-brand-400">{product.stockCount - product.soldCount}</strong>
+                  <strong className="text-brand-600 dark:text-brand-400">{product.stockCount - product.soldCount}</strong>
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-200 dark:border-slate-800">
                 <div
                   className="h-full bg-gradient-to-r from-amber-500 via-brand-500 to-rose-500 rounded-full"
                   style={{ width: `${(product.soldCount / product.stockCount) * 100}%` }}

@@ -62,8 +62,8 @@ export default function WishlistPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center text-slate-400">
         <div className="animate-pulse flex flex-col items-center justify-center space-y-4">
-          <Heart className="w-12 h-12 text-slate-700 animate-bounce" />
-          <div className="h-4 w-48 bg-slate-800 rounded"></div>
+          <Heart className="w-12 h-12 text-slate-400 dark:text-slate-700 animate-bounce" />
+          <div className="h-4 w-48 bg-slate-200 dark:bg-slate-800 rounded"></div>
         </div>
       </div>
     );
@@ -72,26 +72,26 @@ export default function WishlistPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 min-h-[70vh]">
       {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/" className="hover:text-brand-400 transition-colors">
+      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <Link href="/" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
           {isArabic ? 'الرئيسية' : 'Home'}
         </Link>
         <span>/</span>
-        <span className="text-slate-200 font-semibold">{t.wishlistPageTitle}</span>
+        <span className="text-slate-800 dark:text-slate-200 font-semibold">{t.wishlistPageTitle}</span>
       </div>
 
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-600/20 border border-rose-500/30 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-rose-500/10 dark:bg-rose-600/20 border border-rose-500/30 flex items-center justify-center">
               <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {t.wishlistPageTitle}
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                 {t.wishlistSubTitle} — {t.wishlistItemsCount.replace('{count}', String(items.length))}
               </p>
             </div>
@@ -109,7 +109,7 @@ export default function WishlistPage() {
             </button>
             <button
               onClick={clearWishlist}
-              className="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800/80 rounded-xl border border-slate-800 transition-colors text-xs"
+              className="p-2.5 text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-800 transition-colors text-xs"
               title={isArabic ? 'مسح القائمة' : 'Clear Wishlist'}
             >
               <Trash2 className="w-4 h-4" />
@@ -120,13 +120,13 @@ export default function WishlistPage() {
 
       {/* Main Content */}
       {items.length === 0 ? (
-        <div className="py-16 flex flex-col items-center justify-center text-center space-y-6 bg-[#131b2e]/60 border border-slate-800 rounded-3xl p-8">
-          <div className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center shadow-inner">
-            <Heart className="w-10 h-10 text-slate-600" />
+        <div className="py-16 flex flex-col items-center justify-center text-center space-y-6 bg-white dark:bg-[#131b2e]/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm dark:shadow-none transition-colors">
+          <div className="w-20 h-20 rounded-2xl bg-rose-50 dark:bg-slate-900 border border-rose-100 dark:border-slate-800 flex items-center justify-center shadow-inner">
+            <Heart className="w-10 h-10 text-rose-300 dark:text-slate-600" />
           </div>
           <div className="space-y-2 max-w-md">
-            <h2 className="text-xl font-bold text-white">{t.wishlistEmptyTitle}</h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t.wishlistEmptyTitle}</h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {t.wishlistEmptyDesc}
             </p>
           </div>
@@ -140,8 +140,8 @@ export default function WishlistPage() {
           </Link>
 
           {/* Quick Categories to Explore */}
-          <div className="pt-8 border-t border-slate-800/80 w-full max-w-2xl">
-            <p className="text-xs font-semibold text-slate-400 mb-4 uppercase tracking-wider">
+          <div className="pt-8 border-t border-slate-200 dark:border-slate-800/80 w-full max-w-2xl">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">
               {isArabic ? 'أو تصفح أشهر الأقسام:' : 'Or explore popular hardware:'}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -149,7 +149,7 @@ export default function WishlistPage() {
                 <Link
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-500/50 hover:bg-slate-800/80 text-xs font-bold text-slate-200 transition-all text-center"
+                  className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500/50 hover:bg-brand-50/50 dark:hover:bg-slate-800/80 text-xs font-bold text-slate-800 dark:text-slate-200 transition-all text-center shadow-sm"
                 >
                   {isArabic ? cat.titleAr : cat.title}
                 </Link>
@@ -167,23 +167,23 @@ export default function WishlistPage() {
             return (
               <div
                 key={item.id}
-                className="group relative bg-[#131b2e] hover:bg-[#162138] border border-slate-800 rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between hover:border-slate-700 shadow-lg"
+                className="group relative bg-white dark:bg-[#131b2e] hover:bg-slate-50 dark:hover:bg-[#162138] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between hover:border-brand-300 dark:hover:border-slate-700 shadow-sm hover:shadow-lg dark:shadow-none"
               >
                 <div>
                   {/* Image & Remove */}
-                  <div className="relative h-48 w-full rounded-xl overflow-hidden bg-slate-950">
+                  <div className="relative h-48 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                     <Link href={`/product/${item.id}`} className="block w-full h-full">
                       <img
                         src={item.image}
                         alt={productName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300 drop-shadow"
                       />
                     </Link>
                     <button
                       onClick={() => removeItem(item.id)}
                       className={`absolute top-2 ${
                         isArabic ? 'left-2' : 'right-2'
-                      } p-2 rounded-xl bg-slate-900/85 text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 border border-slate-800 transition-colors z-10`}
+                      } p-2 rounded-xl bg-white/90 dark:bg-slate-900/85 text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-800 transition-colors z-10 shadow-sm`}
                       title={t.removeFromWishlist}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -192,7 +192,7 @@ export default function WishlistPage() {
                       <span
                         className={`absolute bottom-2 ${
                           isArabic ? 'right-2' : 'left-2'
-                        } bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md`}
+                        } bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md`}
                       >
                         {t.inStockText}
                       </span>
@@ -200,7 +200,7 @@ export default function WishlistPage() {
                       <span
                         className={`absolute bottom-2 ${
                           isArabic ? 'right-2' : 'left-2'
-                        } bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md`}
+                        } bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md`}
                       >
                         {t.outOfStockText}
                       </span>
@@ -210,35 +210,35 @@ export default function WishlistPage() {
                   {/* Info */}
                   <div className="pt-3.5 space-y-1">
                     {item.brand && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400 block">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 block">
                         {item.brand}
                       </span>
                     )}
                     <Link href={`/product/${item.id}`} className="block">
-                      <h3 className="text-sm font-bold text-white line-clamp-2 group-hover:text-brand-300 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors">
                         {productName}
                       </h3>
                     </Link>
-                    <p className="text-xs text-slate-400 line-clamp-1">{productSpecs}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{productSpecs}</p>
 
                     <div className="flex items-center gap-1.5 text-xs text-amber-400 pt-1">
                       <Star className="w-3.5 h-3.5 fill-amber-400" />
-                      <span className="font-bold">{item.rating || 4.9}</span>
-                      <span className="text-slate-500">({item.reviewsCount || 10})</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300">{item.rating || 4.9}</span>
+                      <span className="text-slate-400 dark:text-slate-500">({item.reviewsCount || 10})</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Price & Action */}
-                <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between gap-3">
+                <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
                   <div>
                     {item.originalPrice > item.price && (
-                      <span className="text-xs line-through text-slate-500 block">
+                      <span className="text-xs line-through text-slate-400 dark:text-slate-500 block font-mono">
                         {item.originalPrice.toLocaleString()} {t.currency}
                       </span>
                     )}
-                    <span className="text-base font-black text-brand-400">
-                      {item.price.toLocaleString()} {t.currency}
+                    <span className="text-base font-black text-slate-900 dark:text-brand-400 font-mono">
+                      {item.price.toLocaleString()} <span className="text-xs text-brand-600 dark:text-brand-400 font-sans">{t.currency}</span>
                     </span>
                   </div>
 
@@ -248,7 +248,7 @@ export default function WishlistPage() {
                     className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 ${
                       isAdded
                         ? 'bg-emerald-600 text-white'
-                        : 'bg-brand-600 hover:bg-brand-500 text-white'
+                        : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-600/20'
                     }`}
                   >
                     {isAdded ? (
