@@ -100,10 +100,10 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
   const inBoxItems = product.includedInBox || [];
 
   return (
-    <div id="product-tabs-section" className="space-y-6 pt-6">
+    <div id="product-tabs-section" className="space-y-6 pt-8">
       {/* Tabs Navigation Header */}
-      <div className="border-b border-slate-800 pb-1 overflow-x-auto scrollbar-none">
-        <div className="flex gap-2 min-w-max">
+      <div className="border-b border-slate-800 pb-2 overflow-x-auto scrollbar-none">
+        <div className="flex gap-2.5 min-w-max p-1 bg-[#090e1a] rounded-2xl border border-slate-800/80 w-fit">
           {tabsConfig.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -111,13 +111,13 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all relative ${
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all relative ${
                   isActive
-                    ? 'bg-brand-600/20 text-brand-300 border border-brand-500/40 shadow-lg shadow-brand-600/10'
-                    : 'bg-[#131b2e]/60 text-slate-400 hover:text-slate-200 hover:bg-[#162138] border border-slate-800/80'
+                    ? 'bg-gradient-to-r from-brand-600 to-rose-600 text-white shadow-lg shadow-brand-600/30'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-brand-400' : 'text-slate-500'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -127,29 +127,33 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
 
       {/* Tab 1: Detailed Specifications */}
       {activeTab === 'specs' && (
-        <div className="bg-[#131b2e]/70 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-xl space-y-6 animate-fade-in">
+        <div className="bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-fade-in">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <h3 className="text-lg font-black text-white">{t.productDetails?.tabSpecs}</h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h3 className="text-xl font-black text-white flex items-center gap-2">
+                <ListTree className="w-5 h-5 text-brand-400" />
+                <span>{t.productDetails?.tabSpecs}</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
                 {isArabic ? 'جدول المواصفات والخصائص الهندسية الكاملة للقطعة' : 'Complete hardware and engineering specifications table'}
               </p>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-slate-800/80 divide-y divide-slate-800/80">
+          <div className="overflow-hidden rounded-2xl border border-slate-800 divide-y divide-slate-800/80 shadow-inner">
             {specs.map((item, index) => {
               const keyText = isArabic && item.keyAr ? item.keyAr : item.key;
               const valText = isArabic && item.valueAr ? item.valueAr : item.value;
               return (
                 <div
                   key={index}
-                  className={`grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-4 text-xs sm:text-sm transition-colors ${
-                    index % 2 === 0 ? 'bg-slate-900/50' : 'bg-slate-950/40'
+                  className={`grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-4 sm:p-5 text-xs sm:text-sm transition-colors ${
+                    index % 2 === 0 ? 'bg-[#090e1b]' : 'bg-[#0c1222]'
                   } hover:bg-brand-950/20`}
                 >
-                  <div className="font-bold text-slate-300 sm:border-e sm:border-slate-800/60 pe-3 flex items-center">
-                    {keyText}
+                  <div className="font-extrabold text-slate-200 sm:border-e sm:border-slate-800/80 pe-4 flex items-center">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-500 me-2 flex-shrink-0" />
+                    <span>{keyText}</span>
                   </div>
                   <div className="sm:col-span-2 text-slate-300 font-medium leading-relaxed">
                     {valText}
@@ -165,9 +169,12 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
       {activeTab === 'overview' && (
         <div className="space-y-6 animate-fade-in">
           {/* Main Description */}
-          <div className="bg-[#131b2e]/70 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
-            <h3 className="text-lg font-black text-white">{t.productDetails?.tabOverview}</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
+          <div className="bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-700/60 rounded-3xl p-6 sm:p-8 space-y-4 shadow-2xl">
+            <h3 className="text-xl font-black text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-brand-400" />
+              <span>{t.productDetails?.tabOverview}</span>
+            </h3>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
               {isArabic && product.descriptionAr ? product.descriptionAr : product.description}
             </p>
           </div>
@@ -182,10 +189,10 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                 return (
                   <div
                     key={idx}
-                    className="p-5 rounded-3xl bg-[#131b2e]/60 border border-slate-800 hover:border-brand-500/40 transition-all space-y-3 group"
+                    className="p-6 rounded-3xl bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-800 hover:border-brand-500/50 transition-all space-y-3 group shadow-xl hover:shadow-brand-900/10"
                   >
-                    <div className="w-10 h-10 rounded-2xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 group-hover:scale-110 transition-transform">
-                      <IconComponent className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600/20 to-purple-600/20 border border-brand-500/40 flex items-center justify-center text-brand-400 group-hover:scale-110 transition-transform shadow-md">
+                      <IconComponent className="w-6 h-6" />
                     </div>
                     <h4 className="text-base font-bold text-white group-hover:text-brand-300 transition-colors">
                       {featTitle}
@@ -203,22 +210,25 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
 
       {/* Tab 3: What's in the Box */}
       {activeTab === 'inBox' && (
-        <div className="bg-[#131b2e]/70 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 animate-fade-in">
+        <div className="bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-fade-in">
           <div>
-            <h3 className="text-lg font-black text-white">{t.productDetails?.tabInBox}</h3>
+            <h3 className="text-xl font-black text-white flex items-center gap-2">
+              <Package className="w-5 h-5 text-brand-400" />
+              <span>{t.productDetails?.tabInBox}</span>
+            </h3>
             <p className="text-xs text-slate-400 mt-1">
               {isArabic ? 'جميع الملحقات والأغراض المرفقة داخل العبوة الأصلية' : 'All accessories and original package contents included'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {inBoxItems.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800"
+                className="flex items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-[#090e1b] border border-slate-800 hover:border-slate-700 transition-all shadow-sm"
               >
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                  <Check className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 shadow-sm">
+                  <Check className="w-5 h-5" />
                 </div>
                 <span className="text-xs sm:text-sm font-bold text-slate-200">
                   {isArabic ? item.ar : item.en}
@@ -233,10 +243,10 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
       {activeTab === 'reviews' && (
         <div className="space-y-6 animate-fade-in">
           {/* Ratings Summary Header */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-[#131b2e]/70 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl items-center">
             {/* Overall Score */}
             <div className="text-center sm:text-start space-y-2 border-b lg:border-b-0 lg:border-e border-slate-800 pb-6 lg:pb-0 lg:pe-6">
-              <span className="text-4xl sm:text-5xl font-black text-white font-mono">
+              <span className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 font-mono">
                 {product.rating}
               </span>
               <div className="flex items-center justify-center sm:justify-start gap-1 text-amber-400 pt-1">
@@ -244,33 +254,35 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                   <Star
                     key={i}
                     className={`w-5 h-5 ${
-                      i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-700'
+                      i < Math.floor(product.rating)
+                        ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_6px_rgba(245,158,11,0.4)]'
+                        : 'text-slate-700'
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 font-medium">
                 {t.productDetails?.basedOnReviews.replace('{count}', String(reviewsList.length))}
               </p>
             </div>
 
             {/* Bars */}
-            <div className="lg:col-span-2 space-y-2">
+            <div className="lg:col-span-2 space-y-2.5">
               {[5, 4, 3, 2, 1].map((stars) => {
                 const count = stars === 5 ? reviewsList.length : 0;
                 const percent = stars === 5 ? 100 : 0;
                 return (
                   <div key={stars} className="flex items-center gap-3 text-xs">
-                    <span className="w-12 font-bold text-slate-400 flex items-center gap-1">
-                      {stars} <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    <span className="w-12 font-bold text-slate-300 flex items-center gap-1">
+                      {stars} <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                     </span>
-                    <div className="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div className="flex-1 h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
                       <div
-                        className="h-full bg-amber-400 rounded-full transition-all"
+                        className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all"
                         style={{ width: `${percent}%` }}
                       />
                     </div>
-                    <span className="w-8 text-end text-slate-500 font-mono">{count}</span>
+                    <span className="w-8 text-end text-slate-500 font-mono font-bold">{count}</span>
                   </div>
                 );
               })}
@@ -278,15 +290,15 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
           </div>
 
           {/* Write a Review Card */}
-          <div className="bg-[#131b2e]/70 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-4">
-            <h4 className="text-base font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-brand-400" />
+          <div className="bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-slate-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+            <h4 className="text-lg font-black text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-brand-400" />
               <span>{t.productDetails?.writeReview}</span>
             </h4>
 
             {reviewSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-bold flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 flex-shrink-0" />
                 <span>{t.productDetails?.reviewSubmittedSuccess}</span>
               </div>
             )}
@@ -302,7 +314,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     required
                     value={reviewForm.name}
                     onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                    className="w-full bg-[#090e1b] border border-slate-750 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 shadow-inner"
                     placeholder="e.g. Ahmed Ali"
                   />
                 </div>
@@ -315,7 +327,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     type="text"
                     value={reviewForm.city}
                     onChange={(e) => setReviewForm({ ...reviewForm, city: e.target.value })}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                    className="w-full bg-[#090e1b] border border-slate-750 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 shadow-inner"
                     placeholder="e.g. Cairo, Nasr City"
                   />
                 </div>
@@ -325,7 +337,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                   {t.productDetails?.reviewFormRating}
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 p-2 rounded-xl bg-[#090e1b] border border-slate-800 w-fit">
                   {[1, 2, 3, 4, 5].map((val) => (
                     <button
                       type="button"
@@ -335,7 +347,9 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     >
                       <Star
                         className={`w-6 h-6 ${
-                          val <= reviewForm.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-700'
+                          val <= reviewForm.rating
+                            ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_6px_rgba(245,158,11,0.4)]'
+                            : 'text-slate-700'
                         }`}
                       />
                     </button>
@@ -352,7 +366,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                   required
                   value={reviewForm.comment}
                   onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 leading-relaxed"
+                  className="w-full bg-[#090e1b] border border-slate-750 rounded-xl p-4 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 leading-relaxed shadow-inner"
                   placeholder="Share details on performance, cooling, packaging, or customer service..."
                 />
               </div>
@@ -360,9 +374,9 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
               <button
                 type="submit"
                 disabled={isSubmittingReview}
-                className="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs transition-all shadow-md flex items-center gap-2"
+                className="px-7 py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white font-black text-xs transition-all shadow-lg shadow-brand-600/30 flex items-center gap-2 active:scale-95"
               >
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-4 h-4" />
                 <span>{t.productDetails?.submitReviewBtn}</span>
               </button>
             </form>
@@ -379,25 +393,25 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
               return (
                 <div
                   key={rev.id}
-                  className="p-5 rounded-3xl bg-[#131b2e]/60 border border-slate-800/90 space-y-3"
+                  className="p-6 rounded-3xl bg-[#0e1629]/80 border border-slate-800 space-y-3 shadow-lg"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-purple-600 text-white font-bold text-xs flex items-center justify-center shadow">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-purple-600 text-white font-black text-xs flex items-center justify-center shadow-md">
                         {authorName.charAt(0)}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <h5 className="text-sm font-bold text-white">{authorName}</h5>
                           {rev.verified && (
-                            <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                            <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
                               <CheckCircle className="w-3 h-3" />
                               <span>{t.productDetails?.verifiedBuyer}</span>
                             </span>
                           )}
                         </div>
                         {cityText && (
-                          <span className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                          <span className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 font-medium">
                             <MapPin className="w-3 h-3" />
                             <span>{cityText}</span>
                           </span>
@@ -410,20 +424,20 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-3.5 h-3.5 ${
+                            className={`w-4 h-4 ${
                               i < rev.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-700'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-slate-500 text-[11px] flex items-center gap-1">
+                      <span className="text-slate-500 text-[11px] flex items-center gap-1 font-mono">
                         <Clock className="w-3 h-3" />
                         <span>{dateText}</span>
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pt-1">
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pt-1 font-normal">
                     {reviewText}
                   </p>
                 </div>
@@ -437,17 +451,17 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
       {activeTab === 'warranty' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
           {/* Shipping Details */}
-          <div className="p-6 rounded-3xl bg-[#131b2e]/70 border border-slate-800 space-y-4 shadow-xl">
+          <div className="p-7 rounded-3xl bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-emerald-500/30 space-y-4 shadow-2xl">
             <div className="flex items-center gap-3 text-emerald-400">
-              <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                <Truck className="w-5 h-5" />
+              <div className="p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30">
+                <Truck className="w-6 h-6" />
               </div>
-              <h4 className="text-base font-bold text-white">
+              <h4 className="text-lg font-black text-white">
                 {isArabic ? 'سياسة الشحن والتسليم في مصر' : 'Egypt Nationwide Delivery'}
               </h4>
             </div>
-            <ul className="space-y-3 text-xs text-slate-300 leading-relaxed">
-              <li className="flex items-start gap-2">
+            <ul className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic
@@ -455,7 +469,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     : 'Cairo & Giza: Delivery within 24 hours with package inspection upon receipt.'}
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic
@@ -463,7 +477,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     : 'Alexandria, Delta & Canal: 24 - 48 hours delivery via insured courier.'}
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic
@@ -475,17 +489,17 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
           </div>
 
           {/* Warranty & Returns */}
-          <div className="p-6 rounded-3xl bg-[#131b2e]/70 border border-slate-800 space-y-4 shadow-xl">
+          <div className="p-7 rounded-3xl bg-gradient-to-b from-[#0e1629] to-[#0a0f1c] border border-brand-500/30 space-y-4 shadow-2xl">
             <div className="flex items-center gap-3 text-brand-400">
-              <div className="p-2.5 rounded-2xl bg-brand-500/10 border border-brand-500/20">
-                <ShieldCheck className="w-5 h-5" />
+              <div className="p-3 rounded-2xl bg-brand-500/15 border border-brand-500/30">
+                <ShieldCheck className="w-6 h-6" />
               </div>
-              <h4 className="text-base font-bold text-white">
+              <h4 className="text-lg font-black text-white">
                 {isArabic ? 'الضمان المعتمد والاستبدال' : 'Official Warranty & Return Policy'}
               </h4>
             </div>
-            <ul className="space-y-3 text-xs text-slate-300 leading-relaxed">
-              <li className="flex items-start gap-2">
+            <ul className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic
@@ -493,7 +507,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     : 'Official local warranty registered by serial number with commercial tax invoice.'}
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic
@@ -501,7 +515,7 @@ export const ProductTabs: React.FC<ProductTabsProps> = ({ product }) => {
                     : '14-Day Free Replacement or Return policy for manufacturer defects without extra fees.'}
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
                 <span>
                   {isArabic

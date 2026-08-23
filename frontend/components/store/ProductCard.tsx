@@ -55,34 +55,34 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   );
 
   return (
-    <div className="group relative bg-[#131b2e] hover:bg-[#162138] border border-slate-800/80 hover:border-brand-500/50 rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-900/10">
+    <div className="group relative bg-[#0e1526]/90 hover:bg-[#121c33] border border-slate-800/80 hover:border-brand-500/50 rounded-3xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-2xl hover:shadow-brand-950/30 hover:-translate-y-1">
       {/* Badges and Quick Actions */}
       <div className="relative">
-        <Link href={productUrl} className="block relative h-48 sm:h-52 w-full rounded-xl overflow-hidden bg-slate-950/80">
+        <Link href={productUrl} className="block relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-slate-950/90 border border-slate-800/50">
           <img
             src={product.image}
             alt={productName}
-            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+            className="w-full h-full object-contain p-3 group-hover:scale-108 transition-transform duration-500 drop-shadow"
             loading="lazy"
           />
 
           {/* Quick View Details Overlay on Hover */}
-          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-            <span className="bg-brand-600/90 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 backdrop-blur-sm transform translate-y-2 group-hover:translate-y-0 transition-transform">
+          <div className="absolute inset-0 bg-slate-950/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none backdrop-blur-[2px]">
+            <span className="bg-gradient-to-r from-brand-600 to-rose-600 text-white text-xs font-black px-3.5 py-1.5 rounded-xl shadow-xl flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform border border-brand-400/30">
               <Eye className="w-3.5 h-3.5" />
               <span>{t.productDetails?.viewDetailsBtn || 'View Details'}</span>
             </span>
           </div>
 
           {/* Badges */}
-          <div className={`absolute top-2 ${isArabic ? 'right-2' : 'left-2'} flex flex-col gap-1 z-10 pointer-events-none`}>
+          <div className={`absolute top-2.5 ${isArabic ? 'right-2.5' : 'left-2.5'} flex flex-col gap-1 z-10 pointer-events-none`}>
             {discountPercent > 0 && (
-              <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md uppercase tracking-wider">
+              <span className="bg-gradient-to-r from-rose-600 to-pink-600 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-md uppercase tracking-wider border border-rose-400/30">
                 -{discountPercent}%
               </span>
             )}
             {productBadge && (
-              <span className="bg-brand-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md">
+              <span className="bg-brand-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg shadow-md border border-brand-400/30">
                 {productBadge}
               </span>
             )}
@@ -92,8 +92,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         {/* Wishlist Button */}
         <button
           onClick={handleWishlistToggle}
-          className={`absolute top-2 ${
-            isArabic ? 'left-2' : 'right-2'
+          className={`absolute top-2.5 ${
+            isArabic ? 'left-2.5' : 'right-2.5'
           } p-2 rounded-xl backdrop-blur-md transition-all z-10 ${
             isInWishlist
               ? 'bg-rose-500/20 text-rose-500 border border-rose-500/40 shadow-lg shadow-rose-500/20'
@@ -107,13 +107,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         {/* Product Info */}
         <div className="pt-3.5 space-y-1.5">
           {product.brand && (
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-400 block">
+            <span className="text-[10px] font-black uppercase tracking-wider text-brand-400 block">
               {product.brand}
             </span>
           )}
 
           <Link href={productUrl} className="block">
-            <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors">
+            <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors leading-snug">
               {productName}
             </h3>
           </Link>
@@ -130,15 +130,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
                   key={i}
                   className={`w-3 h-3 ${
                     i < Math.floor(product.rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-slate-600'
+                      ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(245,158,11,0.3)]'
+                      : 'text-slate-700'
                   }`}
                 />
               ))}
             </div>
-            <span className="font-bold text-slate-300 text-[11px]">{product.rating}</span>
+            <span className="font-extrabold text-slate-300 text-[11px] font-mono">{product.rating}</span>
             <span className="text-[10px] text-slate-500">
-              ({product.reviewsCount} {t.reviewsCountSuffix})
+              ({product.reviewsCount})
             </span>
           </div>
 
@@ -154,9 +154,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
                   <strong className="text-brand-400">{product.stockCount - product.soldCount}</strong>
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
                 <div
-                  className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-amber-500 via-brand-500 to-rose-500 rounded-full"
                   style={{ width: `${(product.soldCount / product.stockCount) * 100}%` }}
                 />
               </div>
@@ -169,11 +169,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
       <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
         <Link href={productUrl} className="block">
           {product.originalPrice > product.price && (
-            <span className="text-xs line-through text-slate-500 block leading-tight">
+            <span className="text-xs line-through text-slate-500 block leading-tight font-mono">
               {product.originalPrice.toLocaleString()} {t.currency}
             </span>
           )}
-          <span className="text-base sm:text-lg font-black text-white bg-gradient-to-r from-white to-slate-200 bg-clip-text">
+          <span className="text-base sm:text-lg font-black text-white font-mono">
             {product.price.toLocaleString()}{' '}
             <span className="text-xs font-bold text-brand-400">{t.currency}</span>
           </span>
@@ -182,10 +182,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
         <button
           onClick={handleAddToCart}
           disabled={added}
-          className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-md ${
+          className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black transition-all active:scale-95 shadow-md ${
             added
               ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-              : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-600/20'
+              : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-600/30 hover:shadow-brand-500/40'
           }`}
           title={t.buyBtn}
         >
@@ -203,4 +203,5 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
     </div>
   );
 };
+
 
