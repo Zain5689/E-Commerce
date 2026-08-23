@@ -4,8 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { SpecsFilterSidebar, FilterOption } from '../../../components/store/SpecsFilterSidebar';
-import { ShoppingCart, Star, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useCartStore } from '../../../lib/store/useCartStore';
+import { ProductCard } from '../../../components/store/ProductCard';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useLanguageStore } from '../../../lib/store/useLanguageStore';
 import { useTranslations } from '../../../lib/data/translations';
 import { FLASH_DEALS, FEATURED_PRODUCTS } from '../../../lib/data/homeData';
@@ -66,8 +66,6 @@ export default function CategoryPage() {
     ? CATEGORY_NAMES_AR[slug] || slug
     : CATEGORY_NAMES_EN[slug] || slug.replace('-', ' ').toUpperCase();
 
-  const addItem = useCartStore((state) => state.addItem);
-
   // Combine products for display
   const allProducts = [...FLASH_DEALS, ...FEATURED_PRODUCTS];
   const filteredProducts = allProducts.filter(
@@ -111,67 +109,9 @@ export default function CategoryPage() {
         {/* Product Grid */}
         <div className="lg:col-span-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {productsToDisplay.map((product) => {
-              const productName = isArabic && product.nameAr ? product.nameAr : product.name;
-              const productSpecs = isArabic && product.specsAr ? product.specsAr : product.specs;
-              const productBadge = isArabic && product.badgeAr ? product.badgeAr : product.badge;
-
-              return (
-                <div
-                  key={product.id}
-                  className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3 group hover:border-slate-700 transition-all flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="relative overflow-hidden rounded-xl h-48 bg-slate-950">
-                      <img
-                        src={product.image}
-                        alt={productName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <span className={`absolute top-2 ${isArabic ? 'right-2' : 'left-2'} bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded`}>
-                        {productBadge || t.officialBadge}
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-bold text-white line-clamp-1">{productName}</h3>
-                      <p className="text-xs text-slate-400 line-clamp-1">{productSpecs}</p>
-                      <div className="flex items-center gap-1 text-amber-400 text-xs pt-1">
-                        <Star className="w-3.5 h-3.5 fill-amber-400" />
-                        <span className="font-bold">{product.rating}</span>
-                        <span className="text-slate-500">({product.reviewsCount} {t.reviewsCountSuffix})</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-800/60 mt-2">
-                    <div>
-                      <span className="text-xs line-through text-slate-500 block">
-                        {product.originalPrice.toLocaleString()} {t.currency}
-                      </span>
-                      <span className="text-lg font-extrabold text-brand-400">
-                        {product.price.toLocaleString()} {t.currency}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() =>
-                        addItem({
-                          productId: product.id,
-                          name: productName,
-                          price: product.price,
-                          image: product.image,
-                          quantity: 1,
-                          sku: product.id,
-                        })
-                      }
-                      className="bg-slate-800 hover:bg-brand-600 text-white p-2.5 rounded-xl transition-colors active:scale-95 shadow-md"
-                      title={t.buyBtn}
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+            {productsToDisplay.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
       </div>

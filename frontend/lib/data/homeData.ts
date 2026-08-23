@@ -1,8 +1,46 @@
+export interface ProductSpecItem {
+  key: string;
+  keyAr: string;
+  value: string;
+  valueAr: string;
+}
+
+export interface ProductFeatureHighlight {
+  title: string;
+  titleAr: string;
+  description: string;
+  descriptionAr: string;
+  iconName: string;
+}
+
+export interface ProductVariantOption {
+  id: string;
+  name: string;
+  nameAr: string;
+  priceDelta: number;
+  specsDelta?: string;
+  specsDeltaAr?: string;
+}
+
+export interface ProductReview {
+  id: string;
+  author: string;
+  authorAr: string;
+  rating: number;
+  date: string;
+  dateAr: string;
+  comment: string;
+  commentAr: string;
+  verified: boolean;
+  userCity?: string;
+  userCityAr?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   nameAr?: string;
-  category: 'laptops' | 'pc-builds' | 'gpus' | 'audio' | 'used' | 'monitors' | 'accessories';
+  category: 'laptops' | 'pc-builds' | 'gpus' | 'audio' | 'used' | 'monitors' | 'accessories' | string;
   specs: string;
   specsAr?: string;
   price: number;
@@ -10,6 +48,9 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   image: string;
+  galleryImages?: string[];
+  description?: string;
+  descriptionAr?: string;
   badge?: string;
   badgeAr?: string;
   badgeColor?: 'red' | 'amber' | 'emerald' | 'blue' | 'purple';
@@ -17,6 +58,15 @@ export interface Product {
   soldCount?: number;
   stockCount?: number;
   brand?: string;
+  sku?: string;
+  modelCode?: string;
+  warrantyPeriod?: string;
+  warrantyPeriodAr?: string;
+  features?: ProductFeatureHighlight[];
+  specifications?: ProductSpecItem[];
+  includedInBox?: { en: string; ar: string }[];
+  variants?: ProductVariantOption[];
+  reviews?: ProductReview[];
 }
 
 export interface CategoryCard {
@@ -470,3 +520,280 @@ export const TESTIMONIALS = [
     verified: true,
   },
 ];
+
+// Helper to get all available store products
+export const getAllProducts = (): Product[] => {
+  return [...FLASH_DEALS, ...FEATURED_PRODUCTS];
+};
+
+// Detailed product gallery and specs database
+const PRODUCT_EXTENDED_DATA: Record<string, Partial<Product>> = {
+  'deal-1': {
+    galleryImages: [
+      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1200&q=80',
+    ],
+    sku: 'ROG-G614JIR-N4003W',
+    modelCode: 'ROG Strix G16 (2024)',
+    warrantyPeriod: '2 Years Local & International Official ASUS Warranty',
+    warrantyPeriodAr: 'ضمان سنتين محلي ودولي معتمد من أسوس مصر',
+    description: 'The ASUS ROG Strix G16 (2024) is engineered for competitive esports and high-end creative workflows. Powered by the 14th Gen Intel Core i7-14700HX processor and NVIDIA GeForce RTX 4070 Laptop GPU, with a blazing-fast 240Hz QHD+ ROG Nebula display, Tri-Fan cooling technology with Conductonaut Extreme Liquid Metal, and Dolby Atmos audio.',
+    descriptionAr: 'لابتوب ASUS ROG Strix G16 لعام 2024 مصمم للألعاب التنافسية وصناع المحتوى الاحترافي. مزود بمعالج إنتل كور i7-14700HX وكارت شاشة إنفيديا RTX 4070 بقوة 140W TGP، مع شاشة ROG Nebula بدقة 2.5K ومعدل تحديث خارق 240Hz، ونظام تبريد ثلاثي المراوح مع معدن سائل موصل للحرارة وصوتيات محيطية Dolby Atmos.',
+    variants: [
+      { id: 'v1', name: '32GB DDR5 / 1TB Gen4 SSD', nameAr: '32 جيجابايت DDR5 / 1 تيرابايت SSD', priceDelta: 0 },
+      { id: 'v2', name: '64GB DDR5 / 2TB Gen4 SSD', nameAr: '64 جيجابايت DDR5 / 2 تيرابايت SSD', priceDelta: 7500, specsDelta: '64GB DDR5 5600MHz + 2TB NVMe', specsDeltaAr: '64 جيجا رام DDR5 + هارد 2 تيرابايت' },
+    ],
+    features: [
+      {
+        title: 'ROG Nebula 240Hz Display',
+        titleAr: 'شاشة ROG Nebula الخارقة 240Hz',
+        description: '16-inch 16:10 QHD+ 240Hz/3ms display with 100% DCI-P3 coverage and G-Sync support.',
+        descriptionAr: 'شاشة مقاس 16 بوصة بنسبة 16:10 ودقة 2.5K ومعدل تحديث 240Hz واستجابة 3ms مع تغطية ألوان 100% DCI-P3.',
+        iconName: 'Monitor',
+      },
+      {
+        title: 'Tri-Fan Intelligent Cooling',
+        titleAr: 'تبريد ذكي بـ 3 مراوح ومعدن سائل',
+        description: 'Conductonaut Extreme liquid metal on CPU keeps temperatures up to 15°C cooler under maximum gaming load.',
+        descriptionAr: 'تبريد متطور بالمعدن السائل Conductonaut Extreme يخفض درجات الحرارة حتى 15 درجة مئوية في أقصى ظروف اللعب.',
+        iconName: 'Snowflake',
+      },
+      {
+        title: 'NVIDIA RTX 4070 with DLSS 3.5',
+        titleAr: 'كارت RTX 4070 بأقصى طاقة 140W',
+        description: 'Full 140W max TGP with MUX Switch and NVIDIA Advanced Optimus for zero frame latency.',
+        descriptionAr: 'طاقة كاملة 140W مع مفتاح MUX مخصص وتقنية Advanced Optimus لضمان أعلى فريمات وبدون تأخير.',
+        iconName: 'Zap',
+      },
+      {
+        title: 'Aura Sync RGB Per-Key Keyboard',
+        titleAr: 'كيبورد ميكانيكي بإضاءة RGB مخصصة',
+        description: 'Per-key RGB customization, 4 dedicated hotkeys, and large precision glass trackpad.',
+        descriptionAr: 'تخصيص كامل للإضاءة لكل زر، مع أزرار اختصارات للألعاب وتاتش باد زجاجي واسع وفائق الدقة.',
+        iconName: 'Sparkles',
+      },
+    ],
+    specifications: [
+      { key: 'Processor (CPU)', keyAr: 'المعالج', value: 'Intel® Core™ i7-14700HX (20 Cores: 8P + 12E, Up to 5.50 GHz, 33MB Cache)', valueAr: 'إنتل كور i7-14700HX (20 نواة، تردد يصل إلى 5.50 جيجاهرتز، كاش 33 ميجابايت)' },
+      { key: 'Graphics (GPU)', keyAr: 'كارت الشاشة', value: 'NVIDIA® GeForce RTX™ 4070 Laptop GPU 8GB GDDR6 (140W Max TGP with Dynamic Boost)', valueAr: 'إنفيديا جي فورس RTX 4070 بسعة 8GB GDDR6 (بأقصى طاقة 140W TGP)' },
+      { key: 'Memory (RAM)', keyAr: 'الذاكرة العشوائية', value: '32GB (2x16GB) DDR5 5600MHz (Upgradeable to 64GB)', valueAr: '32 جيجابايت DDR5 بتردد 5600 ميجاهرتز (قابلة للترقية حتى 64GB)' },
+      { key: 'Storage (SSD)', keyAr: 'التخزين السريع', value: '1TB M.2 NVMe™ PCIe® 4.0 Performance SSD (Extra M.2 Slot Available)', valueAr: '1 تيرابايت M.2 NVMe PCIe 4.0 (يوجد منفذ M.2 إضافي متاح للترقية)' },
+      { key: 'Display', keyAr: 'الشاشة', value: '16.0" QHD+ (2560 x 1600) IPS-level, 240Hz, 3ms, 500 nits, 100% DCI-P3, ROG Nebula', valueAr: '16 بوصة بدقة 2K (2560x1600) تردد 240Hz، سطوع 500 شمعة، 100% DCI-P3' },
+      { key: 'Cooling System', keyAr: 'نظام التبريد', value: 'ROG Intelligent Cooling with 3 Fans & Liquid Metal Thermal Compound', valueAr: 'تبريد ذكي ثلاثي المراوح ومشتت حراري متطور مع معجون معدن سائل' },
+      { key: 'Ports & I/O', keyAr: 'المنافذ والاتصال', value: '1x Thunderbolt™ 4, 1x USB 3.2 Gen 2 Type-C (DisplayPort/PD), 2x USB 3.2 Gen 2 Type-A, 1x HDMI 2.1, 1x 2.5G LAN, 3.5mm Combo', valueAr: '1x ثندربولت 4، 1x تايب سي مع شحن وعرض، 2x تايب ايه، منفذ HDMI 2.1، منفذ شبكة 2.5G LAN' },
+      { key: 'Battery & Power', keyAr: 'البطارية والشاحن', value: '90Wh Li-ion Battery with 280W ROG Fast Charger (50% in 30 mins)', valueAr: 'بطارية 90 واط/ساعة مع شاحن أصلي 280W يدعم الشحن السريع (50% في 30 دقيقة)' },
+      { key: 'Operating System', keyAr: 'نظام التشغيل', value: 'Windows 11 Home Original Licensed', valueAr: 'ويندوز 11 هوم أصلي ومفعل رسمياً' },
+    ],
+    includedInBox: [
+      { en: 'ASUS ROG Strix G16 Laptop', ar: 'لابتوب ASUS ROG Strix G16' },
+      { en: 'Original 280W Power Adapter & AC Cable', ar: 'شاحن أصلي 280 واط وكابل الطاقة' },
+      { en: 'ROG Gaming Mousepad (Special Bundle Gift)', ar: 'ماوس باد ألعاب ROG هدية مجانية' },
+      { en: 'Official Warranty Certificate & Quick Start Manual', ar: 'شهادة الضمان المعتمدة ودليل التشغيل' },
+    ],
+    reviews: [
+      {
+        id: 'r1',
+        author: 'Mohamed Tarek',
+        authorAr: 'محمد طارق',
+        rating: 5,
+        date: '18 August 2026',
+        dateAr: '18 أغسطس 2026',
+        comment: 'Unbelievable gaming beast! Cyberpunk 2077 runs over 110 FPS on Ultra with DLSS Frame Gen. Screen colors are gorgeous and cooling is quiet during normal tasks.',
+        commentAr: 'وحش ألعاب بكل ما تعنيه الكلمة! لعبة سايبر بانك 2077 شغالة بأكثر من 110 فريم على الترا مع DLSS 3. الألوان والسطوع خياليين والتبريد ممتاز جداً.',
+        verified: true,
+        userCity: 'Cairo, New Cairo',
+        userCityAr: 'القاهرة، التجمع الخامس',
+      },
+      {
+        id: 'r2',
+        author: 'Eng. Karim Nabil',
+        authorAr: 'م. كريم نبيل',
+        rating: 5,
+        date: '12 August 2026',
+        dateAr: '12 أغسطس 2026',
+        comment: 'Using it for 3D Blender rendering and Unreal Engine 5. Render speeds are cut in half compared to my old laptop. Nexus delivered it next day sealed with warranty.',
+        commentAr: 'بستخدمه للريندر على بلندر ومحرك Unreal Engine 5، سرعة الريندر تضاعفت مرتين مقارنة بجهازي القديم. استلمته مغلف بتغليف المصنع والضمان ساري.',
+        verified: true,
+        userCity: 'Giza, Sheikh Zayed',
+        userCityAr: 'الجيزة، الشيخ زايد',
+      },
+    ],
+  },
+  'deal-2': {
+    galleryImages: [
+      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=80',
+    ],
+    sku: 'MSI-RTX4070TIS-16G-SLIM',
+    modelCode: 'MSI Gaming X Slim GeForce RTX 4070 Ti Super',
+    warrantyPeriod: '3 Years Official MSI Egypt Warranty',
+    warrantyPeriodAr: 'ضمان 3 سنوات رسمي معتمد من إم إس آي مصر',
+    description: 'The MSI GeForce RTX 4070 Ti Super 16GB Gaming X Slim delivers uncompromising performance in a sleeker, thinner form factor. Features 16GB GDDR6X VRAM on a 256-bit bus, TRI FROZR 3 cooling with TORX FAN 5.0, full ray tracing acceleration, and DLSS 3.5 AI upscaling.',
+    descriptionAr: 'كارت الشاشة الخارق MSI RTX 4070 Ti Super بذاكرة 16 جيجابايت بتصميم نحيف Slim يناسب جميع الكيسات. مزود بنظام تبريد TRI FROZR 3 فائق الهدوء ومراوح TORX FAN 5.0 ودعم كامل لتقنيات تتبع الأشعة والذكاء الاصطناعي DLSS 3.5.',
+    features: [
+      {
+        title: '16GB GDDR6X 256-bit VRAM',
+        titleAr: 'ذاكرة 16GB GDDR6X بعرض 256-Bit',
+        description: 'Massive high-speed memory capable of handling 4K gaming and generative AI models with ease.',
+        descriptionAr: 'سعة ذاكرة ضخمة فائقة السرعة للألعاب بدقة 4K ومشاريع الذكاء الاصطناعي والريندر الثقيل.',
+        iconName: 'Zap',
+      },
+      {
+        title: 'TRI FROZR 3 Thermal Design',
+        titleAr: 'نظام تبريد ثلاثي TRI FROZR 3',
+        description: 'TORX Fan 5.0 with linked outer ring blades stabilizes high-pressure airflow at lower RPM.',
+        descriptionAr: 'مراوح TORX 5.0 متطورة تضمن تدفق هواء مكثف بدون أي ضجيج أثناء الضغط العالي.',
+        iconName: 'Snowflake',
+      },
+      {
+        title: 'Mystic Light RGB & Metal Backplate',
+        titleAr: 'إضاءة Mystic Light وظهر معدني مقوى',
+        description: 'Reinforced die-cast metal backplate with flow-through ventilation and customizable RGB.',
+        descriptionAr: 'لوح خلفي معدني صلب لتشتيت الحرارة وحماية الكارت من الانحناء مع إضاءة RGB قابلة للتخصيص.',
+        iconName: 'ShieldCheck',
+      },
+    ],
+    specifications: [
+      { key: 'GPU Engine', keyAr: 'المعالج الرسومي', value: 'NVIDIA® GeForce RTX™ 4070 Ti SUPER (8448 CUDA Cores)', valueAr: 'إنفيديا جي فورس RTX 4070 Ti Super (8448 كودا كور)' },
+      { key: 'Boost Clock', keyAr: 'تردد البوست', value: '2685 MHz (Extreme Performance via MSI Center)', valueAr: '2685 ميجاهرتز عبر مركز تحكم MSI' },
+      { key: 'Memory Size & Bus', keyAr: 'الذاكرة ونطاقها', value: '16GB GDDR6X | 256-bit | 21 Gbps Memory Speed', valueAr: '16 جيجابايت GDDR6X | نطاق 256-bit | سرعة 21 جيجابت/ث' },
+      { key: 'Power Consumption', keyAr: 'استهلاك الطاقة والمزود', value: '285W (Recommended PSU: 700W or higher, 1x 16-pin 12VHPWR)', valueAr: '285 واط (ينصح بمزود طاقة 700 واط أو أعلى)' },
+      { key: 'Display Outputs', keyAr: 'منافذ العرض', value: '3x DisplayPort 1.4a, 1x HDMI 2.1a (Supports 4K@120Hz HDR, 8K@60Hz HDR)', valueAr: '3x DisplayPort 1.4a، 1x HDMI 2.1a يدعم 4K و 8K' },
+      { key: 'Dimensions', keyAr: 'الأبعاد والوزن', value: '307 x 125 x 51 mm | Weight: 1094g (Slim Tri-Slot)', valueAr: '307 × 125 × 51 مم | الوزن: 1094 جرام' },
+    ],
+    includedInBox: [
+      { en: 'MSI RTX 4070 Ti Super Gaming X Slim GPU', ar: 'كارت شاشة MSI RTX 4070 Ti Super Gaming X Slim' },
+      { en: '16-Pin 12VHPWR Power Adapter Cable', ar: 'كابل محول الطاقة 16-Pin الأصلي' },
+      { en: 'MSI Graphics Card Support Anti-Sag Bracket', ar: 'حامل دعم معدني لمنع انحناء الكارت داخل الكيس' },
+      { en: 'User Guide & Official Warranty Card', ar: 'دليل المستخدم وشهادة الضمان المعتمد' },
+    ],
+  },
+  'prod-f2': {
+    galleryImages: [
+      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=1200&q=80',
+    ],
+    sku: 'NEXUS-RIG-ALPHA-4080S',
+    modelCode: 'Nexus Alpha Monster Build',
+    warrantyPeriod: '3 Years Full System Warranty + 1 Year Free Maintenance',
+    warrantyPeriodAr: 'ضمان 3 سنوات شامل لجميع القطع + سنة صيانة دورية مجانية',
+    description: 'The Nexus Alpha is our flagship custom-built liquid-cooled gaming and workstation rig. Handcrafted by master hardware engineers in Cairo, fully cable-managed, bench-tested with 24-hour stress burns, and backed by a 3-year store and manufacturer warranty.',
+    descriptionAr: 'تجميعة نكسوس ألفا الاحترافية هي الأقوى للألعاب والعمل الشاق. تم تجميعها بعناية فائقة بواسطة مهندسينا مع كابل مانجمنت احترافي، وتبريد مائي 360mm واختبارات ضغط واستقرار لمدة 24 ساعة لضمان أقصى اعتمادية.',
+    specifications: [
+      { key: 'Processor', keyAr: 'المعالج المركزي', value: 'Intel® Core™ i7-14700K (20 Cores, 28 Threads, Up to 5.60 GHz)', valueAr: 'إنتل كور i7-14700K (20 نواة، تردد 5.60 جيجاهرتز)' },
+      { key: 'Motherboard', keyAr: 'اللوحة الأم', value: 'ASUS ROG STRIX Z790-F GAMING WIFI II DDR5', valueAr: 'لوحة أم ASUS ROG STRIX Z790-F مزودة بواي فاي 7 وبلوتوث' },
+      { key: 'Graphics Card', keyAr: 'كارت الشاشة', value: 'NVIDIA GeForce RTX 4080 SUPER 16GB GDDR6X', valueAr: 'إنفيديا جي فورس RTX 4080 Super بذاكرة 16GB GDDR6X' },
+      { key: 'RAM Memory', keyAr: 'الذاكرة الرام', value: '32GB (2x16GB) Corsair Dominator Titanium DDR5 6000MHz RGB CL30', valueAr: '32 جيجابايت DDR5 بسرعة 6000MHz توقيت فائق CL30' },
+      { key: 'Storage', keyAr: 'وحدات التخزين', value: '2TB Kingston FURY Renegade PCIe 4.0 NVMe (7300 MB/s)', valueAr: '2 تيرابايت Kingston FURY Gen4 بسرعة 7300 ميجابايت/ث' },
+      { key: 'Cooling System', keyAr: 'التبريد المائي', value: 'NZXT Kraken Elite 360 RGB AIO Liquid Cooler with LCD Screen', valueAr: 'مبرد مائي NZXT Kraken Elite 360 بشاشة LCD تفاعلية' },
+      { key: 'Power Supply (PSU)', keyAr: 'مزود الطاقة', value: 'Corsair RM850x 850W 80 PLUS Gold Fully Modular ATX 3.0', valueAr: 'باور سبلاي Corsair 850W معتمد 80+ Gold بموديلات PCIe 5.0' },
+      { key: 'Chassis / Case', keyAr: 'الكيس', value: 'Lian Li O11 Dynamic EVO RGB Black + 6x Uni Fan SL-Infinity', valueAr: 'كيس Lian Li O11 Dynamic EVO RGB مع 6 مراوح إنفينيتي' },
+    ],
+  },
+};
+
+// Generic dynamic fallback builder for any product ID
+export const getProductById = (id: string): Product | null => {
+  const all = getAllProducts();
+  const base = all.find((p) => p.id === id);
+  if (!base) return null;
+
+  const extended = PRODUCT_EXTENDED_DATA[id] || {};
+
+  // Build default fallback gallery images if not explicitly specified
+  const defaultGallery = [
+    base.image,
+    'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=80',
+    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
+    'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1000&q=80',
+  ];
+
+  // Build fallback specifications from specs text
+  const defaultSpecs: ProductSpecItem[] = [
+    { key: 'Brand / Manufacturer', keyAr: 'الشركة المصنعة', value: base.brand || 'Nexus Certified', valueAr: base.brand || 'نكسوس المعتمدة' },
+    { key: 'Main Configuration', keyAr: 'المواصفات الرئيسية', value: base.specs, valueAr: base.specsAr || base.specs },
+    { key: 'Condition', keyAr: 'حالة المنتج', value: base.category === 'used' ? 'Certified Used Grade A+ (Like New)' : 'Brand New 100% Factory Sealed', valueAr: base.category === 'used' ? 'استيراد فرز أول بحالة الزيرو معتمد' : 'جديد كلياً متبرشم بتغليف المصنع' },
+    { key: 'Warranty & Support', keyAr: 'الضمان والدعم', value: base.category === 'used' ? '6 Months Full Store Warranty' : '2 Years Official Agent Warranty', valueAr: base.category === 'used' ? 'ضمان 6 شهور استبدال من المتجر' : 'ضمان سنتين معتمد من الوكيل الرسمي' },
+    { key: 'Availability', keyAr: 'حالة التوفر', value: base.inStock !== false ? 'In Stock - Ready for Fast Delivery' : 'Out of Stock', valueAr: base.inStock !== false ? 'متوفر حالياً بالمخزن وجاهز للشحن الفوري' : 'غير متوفر حالياً' },
+  ];
+
+  const defaultFeatures: ProductFeatureHighlight[] = [
+    {
+      title: 'Official Agent Guarantee',
+      titleAr: 'ضمان الوكيل الرسمي المعتمد',
+      description: '100% Genuine with serialized warranty and official Egyptian invoice.',
+      descriptionAr: 'منتج أصلي بنسبة 100% مع رقم تسلسلي مسجل وفاتورة ضريبية رسمية.',
+      iconName: 'ShieldCheck',
+    },
+    {
+      title: 'Fast & Insured Delivery',
+      titleAr: 'شحن آمن وسريع لباب البيت',
+      description: 'Express shipping within 24-48 hours with insured protective packaging.',
+      descriptionAr: 'توصيل خلال 24 إلى 48 ساعة في تغليف مصفح ضد الصدمات.',
+      iconName: 'Truck',
+    },
+    {
+      title: '14-Day Free Replacement',
+      titleAr: 'استبدال مجاني خلال 14 يوم',
+      description: 'Hassle-free return and exchange policy according to consumer protection laws.',
+      descriptionAr: 'حق الاستبدال والاسترجاع بدون أي تعقيد وفقاً لقانون حماية المستهلك.',
+      iconName: 'RotateCcw',
+    },
+  ];
+
+  const defaultInBox = [
+    { en: `${base.name} Unit`, ar: `جهاز / قطعة ${base.nameAr || base.name}` },
+    { en: 'Original Accessories & Cabling', ar: 'الملحقات والكابلات الأصلية' },
+    { en: 'Official Warranty Certificate & Invoice', ar: 'شهادة الضمان المعتمدة والفاتورة الرسمية' },
+  ];
+
+  const defaultReviews: ProductReview[] = [
+    {
+      id: 'rev-default-1',
+      author: 'Hazem Mahmoud',
+      authorAr: 'حازم محمود',
+      rating: 5,
+      date: '10 August 2026',
+      dateAr: '10 أغسطس 2026',
+      comment: 'Top quality product, exactly as described! Excellent service from the Nexus team.',
+      commentAr: 'المنتج ممتاز والتغليف نظيف جداً ومطابق للمواصفات بالضبط. شكراً لفريق نكسوس ستور.',
+      verified: true,
+      userCity: 'Alexandria',
+      userCityAr: 'الإسكندرية',
+    },
+    {
+      id: 'rev-default-2',
+      author: 'Kareem Adel',
+      authorAr: 'كريم عادل',
+      rating: 5,
+      date: '4 August 2026',
+      dateAr: '4 أغسطس 2026',
+      comment: 'Very fast shipping and premium build quality. Highly recommended!',
+      commentAr: 'الشحن وصل في أقل من 24 ساعة والمنتج أصلي وبالضمان. تجربة ممتازة وبنصح بالتعامل معاهم.',
+      verified: true,
+      userCity: 'Cairo',
+      userCityAr: 'القاهرة',
+    },
+  ];
+
+  return {
+    ...base,
+    galleryImages: extended.galleryImages || defaultGallery,
+    sku: extended.sku || `NEX-${base.id.toUpperCase()}`,
+    modelCode: extended.modelCode || base.name,
+    warrantyPeriod: extended.warrantyPeriod || (base.category === 'used' ? '6 Months Store Warranty' : '2 Years Official Warranty'),
+    warrantyPeriodAr: extended.warrantyPeriodAr || (base.category === 'used' ? 'ضمان 6 شهور استبدال معتمد' : 'ضمان سنتين رسمي من الوكيل'),
+    description: extended.description || `${base.name} delivers extreme performance with top-grade hardware specifications for gamers and professionals in Egypt.`,
+    descriptionAr: extended.descriptionAr || `${base.nameAr || base.name} يقدم أفضل مستويات الأداء مع أحدث التقنيات وقطع الهاردوير الأصلية للألعاب وصناع المحتوى في مصر مع ضمان معتمد.`,
+    variants: extended.variants,
+    features: extended.features || defaultFeatures,
+    specifications: extended.specifications || defaultSpecs,
+    includedInBox: extended.includedInBox || defaultInBox,
+    reviews: extended.reviews || defaultReviews,
+  };
+};
+

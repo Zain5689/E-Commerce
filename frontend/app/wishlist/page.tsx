@@ -172,11 +172,13 @@ export default function WishlistPage() {
                 <div>
                   {/* Image & Remove */}
                   <div className="relative h-48 w-full rounded-xl overflow-hidden bg-slate-950">
-                    <img
-                      src={item.image}
-                      alt={productName}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <Link href={`/product/${item.id}`} className="block w-full h-full">
+                      <img
+                        src={item.image}
+                        alt={productName}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </Link>
                     <button
                       onClick={() => removeItem(item.id)}
                       className={`absolute top-2 ${
@@ -212,7 +214,11 @@ export default function WishlistPage() {
                         {item.brand}
                       </span>
                     )}
-                    <h3 className="text-sm font-bold text-white line-clamp-2">{productName}</h3>
+                    <Link href={`/product/${item.id}`} className="block">
+                      <h3 className="text-sm font-bold text-white line-clamp-2 group-hover:text-brand-300 transition-colors">
+                        {productName}
+                      </h3>
+                    </Link>
                     <p className="text-xs text-slate-400 line-clamp-1">{productSpecs}</p>
 
                     <div className="flex items-center gap-1.5 text-xs text-amber-400 pt-1">

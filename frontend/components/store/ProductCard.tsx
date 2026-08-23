@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShoppingCart, Star, Check, Heart } from 'lucide-react';
+import Link from 'next/link';
+import { ShoppingCart, Star, Check, Heart, Eye } from 'lucide-react';
 import { Product } from '../../lib/data/homeData';
 import { useCartStore } from '../../lib/store/useCartStore';
 import { useWishlistStore } from '../../lib/store/useWishlistStore';
@@ -26,6 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   const productName = isArabic && product.nameAr ? product.nameAr : product.name;
   const productSpecs = isArabic && product.specsAr ? product.specsAr : product.specs;
   const productBadge = isArabic && product.badgeAr ? product.badgeAr : product.badge;
+  const productUrl = `/product/${product.id}`;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
       price: product.price,
       image: product.image,
       quantity: 1,
-      sku: product.id,
+      sku: product.sku || product.id,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -56,7 +58,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
     <div className="group relative bg-[#131b2e] hover:bg-[#162138] border border-slate-800/80 hover:border-brand-500/50 rounded-2xl p-4 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-900/10">
       {/* Badges and Quick Actions */}
       <div className="relative">
-        <div className="relative h-48 sm:h-52 w-full rounded-xl overflow-hidden bg-slate-950/80">
+        <Link href={productUrl} className="block relative h-48 sm:h-52 w-full rounded-xl overflow-hidden bg-slate-950/80">
           <img
             src={product.image}
             alt={productName}
@@ -64,8 +66,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
             loading="lazy"
           />
 
+          {/* Quick View Details Overlay on Hover */}
+          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+            <span className="bg-brand-600/90 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 backdrop-blur-sm transform translate-y-2 group-hover:translate-y-0 transition-transform">
+              <Eye className="w-3.5 h-3.5" />
+              <span>{t.productDetails?.viewDetailsBtn || 'View Details'}</span>
+            </span>
+          </div>
+
           {/* Badges */}
-          <div className={`absolute top-2 ${isArabic ? 'right-2' : 'left-2'} flex flex-col gap-1 z-10`}>
+          <div className={`absolute top-2 ${isArabic ? 'right-2' : 'left-2'} flex flex-col gap-1 z-10 pointer-events-none`}>
             {discountPercent > 0 && (
               <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md uppercase tracking-wider">
                 -{discountPercent}%
@@ -77,22 +87,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
               </span>
             )}
           </div>
+        </Link>
 
-          {/* Wishlist Button */}
-          <button
-            onClick={handleWishlistToggle}
-            className={`absolute top-2 ${
-              isArabic ? 'left-2' : 'right-2'
-            } p-2 rounded-xl backdrop-blur-md transition-all z-10 ${
-              isInWishlist
-                ? 'bg-rose-500/20 text-rose-500 border border-rose-500/40 shadow-lg shadow-rose-500/20'
-                : 'bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 border border-slate-700/50'
-            }`}
-            title={isInWishlist ? t.removeFromWishlist : t.wishlist}
-          >
-            <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-rose-500 text-rose-500' : ''}`} />
-          </button>
-        </div>
+        {/* Wishlist Button */}
+        <button
+          onClick={handleWishlistToggle}
+          className={`absolute top-2 ${
+            isArabic ? 'left-2' : 'right-2'
+          } p-2 rounded-xl backdrop-blur-md transition-all z-10 ${
+            isInWishlist
+              ? 'bg-rose-500/20 text-rose-500 border border-rose-500/40 shadow-lg shadow-rose-500/20'
+              : 'bg-slate-900/80 text-slate-400 hover:text-rose-500 hover:bg-slate-800 border border-slate-700/50'
+          }`}
+          title={isInWishlist ? t.removeFromWishlist : t.wishlist}
+        >
+          <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-rose-500 text-rose-500' : ''}`} />
+        </button>
 
         {/* Product Info */}
         <div className="pt-3.5 space-y-1.5">
@@ -102,9 +112,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
             </span>
           )}
 
-          <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors">
-            {productName}
-          </h3>
+          <Link href={productUrl} className="block">
+            <h3 className="text-sm font-bold text-slate-100 line-clamp-2 group-hover:text-brand-300 transition-colors">
+              {productName}
+            </h3>
+          </Link>
 
           <p className="text-[11px] text-slate-400 line-clamp-1">
             {productSpecs}
@@ -155,7 +167,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
 
       {/* Pricing & Add to Cart */}
       <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
-        <div>
+        <Link href={productUrl} className="block">
           {product.originalPrice > product.price && (
             <span className="text-xs line-through text-slate-500 block leading-tight">
               {product.originalPrice.toLocaleString()} {t.currency}
@@ -165,7 +177,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
             {product.price.toLocaleString()}{' '}
             <span className="text-xs font-bold text-brand-400">{t.currency}</span>
           </span>
-        </div>
+        </Link>
 
         <button
           onClick={handleAddToCart}
@@ -191,3 +203,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
     </div>
   );
 };
+
