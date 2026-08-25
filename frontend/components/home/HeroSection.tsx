@@ -3,21 +3,39 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { HERO_SLIDES, SIDE_HERO_BANNERS } from '../../lib/data/homeData';
+import { HERO_SLIDES as FALLBACK_SLIDES, SIDE_HERO_BANNERS as FALLBACK_SIDES } from '../../lib/data/homeData';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
+import { homeApi } from '../../lib/api/apiClient';
 
 export const HeroSection: React.FC = () => {
   const [current, setCurrent] = useState(0);
   const { isArabic } = useLanguageStore();
+  const [slides, setSlides] = useState<any[]>(FALLBACK_SLIDES);
+  const [sides, setSides] = useState<any[]>(FALLBACK_SIDES);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    homeApi.getHomeData().then((res) => {
+      if (res.data) {
+        if (res.data.heroSlides && res.data.heroSlides.length > 0) {
+          setSlides(res.data.heroSlides);
+        }
+        if (res.data.sideBanners && res.data.sideBanners.length > 0) {
+          setSides(res.data.sideBanners);
+        }
+      }
+    }).catch(() => {/* fallback */});
   }, []);
 
-  const slide = HERO_SLIDES[current];
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  if (!slides || slides.length === 0) return null;
+  const slide = slides[current] || slides[0];
 
   return (
     <section className="w-full">
@@ -29,7 +47,7 @@ export const HeroSection: React.FC = () => {
             <div className="absolute inset-0 transition-opacity duration-700">
               <img
                 src={slide.image}
-                alt={isArabic ? slide.titleAr : slide.title}
+                alt={isArabic ? (slide.titleAr || slide.title) : slide.title}
                 className="w-full h-full object-cover object-center"
               />
               <div
@@ -44,41 +62,41 @@ export const HeroSection: React.FC = () => {
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col justify-center px-8 sm:px-12 py-8 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-300 text-xs font-bold w-fit animate-pulse">
-                {isArabic ? slide.tagAr : slide.tag}
+                {isArabic ? (slide.tagAr || slide.tag) : slide.tag}
               </div>
 
               <h1 className="text-2xl sm:text-3xl xl:text-4xl font-black text-white leading-snug tracking-tight max-w-lg">
-                {isArabic ? slide.titleAr : slide.title}
+                {isArabic ? (slide.titleAr || slide.title) : slide.title}
               </h1>
 
               <p className="text-slate-300 text-sm max-w-sm leading-relaxed hidden sm:block">
-                {isArabic ? slide.descriptionAr : slide.description}
+                {isArabic ? (slide.descriptionAr || slide.description) : slide.description}
               </p>
 
               <div className="flex items-center gap-3 flex-wrap pt-1">
                 <Link
-                  href={slide.btnLink}
+                  href={slide.btnLink || '/category/laptops'}
                   className="bg-brand-600 hover:bg-brand-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-lg shadow-brand-600/30 active:scale-95"
                 >
-                  {isArabic ? slide.btnTextAr : slide.btnText}
+                  {isArabic ? (slide.btnTextAr || slide.btnText) : slide.btnText}
                   {isArabic ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
                 </Link>
                 <span className="bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-lg">
-                  {isArabic ? slide.discountAr : slide.discount}
+                  {isArabic ? (slide.discountAr || slide.discount) : slide.discount}
                 </span>
               </div>
             </div>
 
             {/* Slide Nav Buttons */}
             <button
-              onClick={() => setCurrent((current - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+              onClick={() => setCurrent((current - 1 + slides.length) % slides.length)}
               className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-all backdrop-blur-sm"
               title="Previous"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => setCurrent((current + 1) % HERO_SLIDES.length)}
+              onClick={() => setCurrent((current + 1) % slides.length)}
               className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-all backdrop-blur-sm"
               title="Next"
             >
@@ -87,7 +105,7 @@ export const HeroSection: React.FC = () => {
 
             {/* Dots */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-              {HERO_SLIDES.map((_, i) => (
+              {slides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
@@ -101,30 +119,30 @@ export const HeroSection: React.FC = () => {
 
           {/* Side Banners */}
           <div className="flex flex-row lg:flex-col gap-4">
-            {SIDE_HERO_BANNERS.map((banner) => (
+            {sides.map((banner, index) => (
               <Link
-                key={banner.id}
-                href={banner.link}
+                key={banner._id || banner.id || index}
+                href={banner.btnLink || banner.link || '/'}
                 className="relative flex-1 rounded-2xl overflow-hidden h-[148px] sm:h-[180px] lg:h-full group block"
               >
                 <img
                   src={banner.image}
-                  alt={isArabic ? banner.titleAr : banner.title}
+                  alt={isArabic ? (banner.titleAr || banner.title) : banner.title}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className={`absolute inset-0 bg-gradient-to-br ${banner.bgGradient}`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${banner.bgGradient || 'from-blue-950/80 to-slate-900'}`} />
                 <div className="relative z-10 h-full flex flex-col justify-end p-4">
                   <span className="text-[10px] font-black uppercase tracking-widest text-brand-400 bg-brand-400/10 px-2 py-0.5 rounded w-fit mb-1">
-                    {isArabic ? banner.badgeAr : banner.badge}
+                    {isArabic ? (banner.badgeAr || banner.badge) : banner.badge}
                   </span>
                   <h3 className="text-sm font-bold text-white leading-snug">
-                    {isArabic ? banner.titleAr : banner.title}
+                    {isArabic ? (banner.titleAr || banner.title) : banner.title}
                   </h3>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    {isArabic ? banner.subtitleAr : banner.subtitle}
+                    {isArabic ? (banner.subtitleAr || banner.subtitle) : banner.subtitle}
                   </p>
                   <p className="text-xs font-bold text-amber-300 mt-1">
-                    {isArabic ? banner.priceTextAr : banner.priceText}
+                    {isArabic ? (banner.priceTextAr || banner.priceText) : banner.priceText}
                   </p>
                 </div>
               </Link>
