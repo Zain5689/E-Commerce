@@ -1,7 +1,11 @@
+import { Types } from 'mongoose';
 import { Order, IOrder, IOrderItem, IOrderAddress } from '../../models/Order';
 import { Coupon } from '../../models/Coupon';
 import { Governorate } from '../../models/Governorate';
 import { AppError } from '../../common/middleware/errorHandler';
+import { Product } from '../../models/Product';
+
+
 
 export interface CreateOrderDto {
   userId?: string;
@@ -9,7 +13,7 @@ export interface CreateOrderDto {
   guestPhone?: string;
   items: IOrderItem[];
   shippingAddress: IOrderAddress;
-  governorate: string;
+  governorate?: string;
   promoCode?: string;
   paymentMethod?: 'COD' | 'CREDIT_CARD' | 'FAWRY' | 'VODAFONE_CASH';
   notes?: string;
@@ -25,8 +29,27 @@ export class OrdersService {
       throw new AppError(400, 'Complete shipping address is required');
     }
 
+    // Hydrate items with name/image if missing
+    for (const item of data.items) {
+      if (!item.name || !item.image) {
+        const query: any[] = [{ id: item.productId }];
+        if (Types.ObjectId.isValid(item.productId)) {
+          query.push({ _id: item.productId });
+        }
+        const prod = await Product.findOne({ $or: query });
+        if (prod) {
+          item.name = item.name || prod.name;
+          item.image = item.image || prod.image;
+        } else {
+          item.name = item.name || 'Hardware Product';
+          item.image = item.image || 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=300&q=80';
+        }
+      }
+    }
+
     // Calculate subtotal
     const subtotal = data.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
 
     // Calculate shipping fee
     let shippingFee = 50;
