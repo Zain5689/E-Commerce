@@ -34,6 +34,13 @@ export const FlashDealsSection: React.FC = () => {
   const { h, m, s } = useCountdown(5);
   const { language } = useLanguageStore();
   const t = useTranslations(language);
+  const [products, setProducts] = useState(FLASH_DEALS as any[]);
+
+  useEffect(() => {
+    productsApi.getFlashDeals(6).then((res) => {
+      if (res.data && res.data.length > 0) setProducts(res.data);
+    }).catch(() => {/* keep static fallback */});
+  }, []);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
@@ -87,8 +94,8 @@ export const FlashDealsSection: React.FC = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {FLASH_DEALS.map((product) => (
-          <ProductCard key={product.id} product={product} showProgress />
+        {products.map((product) => (
+          <ProductCard key={product.id || product._id} product={product} showProgress />
         ))}
       </div>
     </section>
