@@ -4,6 +4,7 @@ import { Product } from '../models/Product';
 import { Category } from '../models/Category';
 import { Brand } from '../models/Brand';
 import { Coupon } from '../models/Coupon';
+import { Banner, Testimonial } from '../models/Home';
 
 export async function seedDatabase() {
   try {
@@ -72,6 +73,130 @@ export async function seedDatabase() {
         { name: 'Custom PC', slug: 'custom-pc', logo: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=100&q=80' },
       ]);
       console.log('🏷️ Brands seeded');
+    }
+
+    // --- Banners ---
+    const bannerCount = await Banner.countDocuments();
+    if (bannerCount === 0) {
+      await Banner.insertMany([
+        {
+          title: 'Extreme RTX 4090 Rigs & Gaming Laptops',
+          titleAr: 'أقوى تجميعات RTX 4090 ولابتوبات الجيمنج الخارقة',
+          tag: '⚡ 2026 Gaming Masterpiece',
+          tagAr: '⚡ تحفة الألعاب لعام 2026',
+          description: 'Experience unmatched frame rates with Intel 14th Gen & AMD Ryzen 9 7950X3D gaming powerhouses.',
+          descriptionAr: 'استمتع بأعلى معدل إطارات وأقصى أداء مع معالجات Intel الجيل 14 و AMD Ryzen 9 7950X3D.',
+          btnText: 'Shop Gaming Deals',
+          btnTextAr: 'تسوق عروض الجيمنج',
+          btnLink: '/category/laptops',
+          image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=80',
+          discount: 'Up to 25% OFF',
+          discountAr: 'خصم يصل إلى 25%',
+          type: 'hero',
+          displayOrder: 1,
+        },
+        {
+          title: 'Next-Gen Custom PC Builds & Workstations',
+          titleAr: 'تجميعات PC احترافية ومحطات عمل Workstation',
+          tag: '🔥 Custom Rig Assembly',
+          tagAr: '🔥 تجميع احترافي مخصص',
+          description: 'Built by hardware experts in Cairo & Alexandria with 3-year official warranty & stress testing.',
+          descriptionAr: 'تجميع بواسطة خبراء الهاردوير في القاهرة والإسكندرية مع ضمان رسمي 3 سنوات واختبارات ضغط.',
+          btnText: 'Build Your PC',
+          btnTextAr: 'جمّع جهازك الآن',
+          btnLink: '/category/pc-components',
+          image: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=80',
+          discount: 'Free Assembly + Windows 11',
+          discountAr: 'تجميع مجاني + Windows 11',
+          type: 'hero',
+          displayOrder: 2,
+        },
+        {
+          title: 'Top Tier Workstation Laptops & Hardware',
+          titleAr: 'أفضل لابتوبات وركستيشن وقطع استيراد بحالة الزيرو',
+          tag: '✨ Certified Original Used (استيراد مضمون)',
+          tagAr: '✨ استيراد أصلي مضمون (فرز أول)',
+          description: 'Grade A+ Dell Precision, HP ZBook, and ThinkPads with official 6-month store warranty.',
+          descriptionAr: 'أجهزة Dell Precision و HP ZBook و ThinkPad فئة A+ مع ضمان معتمد لمدة 6 أشهر من متجرنا.',
+          btnText: 'Explore Used Outlet',
+          btnTextAr: 'تصفح قسم الاستيراد',
+          btnLink: '/category/used',
+          image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=1200&q=80',
+          discount: 'Starting from 9,999 EGP',
+          discountAr: 'تبدأ من 9,999 ج.م',
+          type: 'hero',
+          displayOrder: 3,
+        },
+        {
+          title: 'GeForce RTX™ 4080 Super',
+          titleAr: 'GeForce RTX™ 4080 Super',
+          subtitle: 'Ultra Performance Series',
+          subtitleAr: 'سلسلة الأداء الفائق والـ 4K',
+          priceText: 'From 49,999 EGP',
+          priceTextAr: 'تبدأ من 49,999 ج.م',
+          btnLink: '/category/gpus',
+          badge: 'NEW',
+          badgeAr: 'جديد',
+          bgGradient: 'from-blue-950/80 to-slate-900',
+          image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80',
+          type: 'side',
+          displayOrder: 1,
+        },
+        {
+          title: 'Smart CCTV & Home Security',
+          titleAr: 'كاميرات مراقبة وأمان ذكي',
+          subtitle: 'EZVIZ & IMOU 4K Night Vision',
+          subtitleAr: 'EZVIZ & IMOU بدقة 4K ورؤية ليلية',
+          priceText: 'Special Bundle Deals',
+          priceTextAr: 'عروض باقات حصرية',
+          btnLink: '/category/cctv',
+          badge: 'HOT',
+          badgeAr: 'الأكثر طلباً',
+          bgGradient: 'from-rose-950/80 to-slate-900',
+          image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=400&q=80',
+          type: 'side',
+          displayOrder: 2,
+        },
+      ]);
+      console.log('🖼️ Banners seeded');
+    }
+
+    // --- Testimonials ---
+    const testimonialCount = await Testimonial.countDocuments();
+    if (testimonialCount === 0) {
+      await Testimonial.insertMany([
+        {
+          customerName: 'Eng. Ahmed El-Sayed (Cairo)',
+          customerNameAr: 'م. أحمد السيد (القاهرة)',
+          comment: 'Bought an RTX 4070 Ti build with i7-14700K. Cable management and packaging were superb, delivered the next day in Maadi with official warranty.',
+          commentAr: 'اشتريت تجميعة RTX 4070 Ti مع i7-14700K، التقفيل والكابل مانجمنت ممتاز، والتوصيل كان تاني يوم في المعادي مع الفاتورة والضمان المعتمد.',
+          rating: 5,
+          date: 'August 2026',
+          dateAr: 'أغسطس 2026',
+          verified: true,
+        },
+        {
+          customerName: 'Dr. Mahmoud Farouk (Alexandria)',
+          customerNameAr: 'د. محمود فاروق (الإسكندرية)',
+          comment: 'Received an HP ZBook mint condition from the Sidi Bishr branch. 98% battery health, genuine charger, and smooth shopping experience.',
+          commentAr: 'استلمت لابتوب HP ZBook كسر زيرو من فرع سيدي بشر، الجهاز حالته زيرو حرفياً والبطارية 98% وتجربة الشراء من المتجر ممتازة ومضمونة.',
+          rating: 5,
+          date: 'August 2026',
+          dateAr: 'أغسطس 2026',
+          verified: true,
+        },
+        {
+          customerName: 'Youssef Gamal (Mansoura)',
+          customerNameAr: 'يوسف جمال (المنصورة)',
+          comment: 'Excellent and fast customer service on WhatsApp. Installments with ValU were processed in minutes without hassle.',
+          commentAr: 'خدمة عملاء ممتازة وسريعة جداً على الواتساب، والتقسيط بـ ValU تم في دقائق بدون تعقيد واستلمت الشحنة مغلفة بإحكام.',
+          rating: 5,
+          date: 'July 2026',
+          dateAr: 'يوليو 2026',
+          verified: true,
+        },
+      ]);
+      console.log('💬 Testimonials seeded');
     }
 
     // --- Products ---

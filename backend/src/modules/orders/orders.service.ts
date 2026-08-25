@@ -29,25 +29,25 @@ export class OrdersService {
       throw new AppError(400, 'Complete shipping address is required');
     }
 
-    // Hydrate items with name/image if missing
+    // Hydrate items with name, image, and authoritative price from Database
     for (const item of data.items) {
-      if (!item.name || !item.image) {
-        const query: any[] = [{ id: item.productId }];
-        if (Types.ObjectId.isValid(item.productId)) {
-          query.push({ _id: item.productId });
-        }
-        const prod = await Product.findOne({ $or: query });
-        if (prod) {
-          item.name = item.name || prod.name;
-          item.image = item.image || prod.image;
-        } else {
-          item.name = item.name || 'Hardware Product';
-          item.image = item.image || 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=300&q=80';
-        }
+      const query: any[] = [{ id: item.productId }, { slug: item.productId }];
+      if (Types.ObjectId.isValid(item.productId)) {
+        query.push({ _id: item.productId });
+      }
+      const prod = await Product.findOne({ $or: query });
+      if (prod) {
+        item.name = prod.name;
+        item.image = prod.image;
+        item.price = prod.price;
+      } else {
+        item.name = item.name || 'Hardware Product';
+        item.image = item.image || 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=300&q=80';
+        item.price = item.price || 0;
       }
     }
 
-    // Calculate subtotal
+    // Calculate subtotal on backend
     const subtotal = data.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
 

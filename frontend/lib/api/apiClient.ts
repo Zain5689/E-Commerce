@@ -156,3 +156,8 @@ export const shippingApi = {
   getGovernorates: () =>
     api.get<{ success: boolean; data: any }>('/shipping/governorates'),
 };
+
+export const homeApi = {
+  getHomeData: () =>
+    api.get<{ success: boolean; data: any }>('/home'),
+};
