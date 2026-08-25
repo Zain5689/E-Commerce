@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { AuthController } from './auth.controller';
+import { authenticate } from '../../common/middleware/authGuard';
+
+const router = Router();
+
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+router.post('/refresh', AuthController.refresh);
+router.post('/logout', AuthController.logout);
+router.get('/me', authenticate, AuthController.getMe);
+router.put('/profile', authenticate, AuthController.updateProfile);
+
+export default router;
