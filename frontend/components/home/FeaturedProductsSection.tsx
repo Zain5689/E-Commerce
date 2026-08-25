@@ -25,18 +25,23 @@ export const FeaturedProductsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('all');
   const { language } = useLanguageStore();
   const t = useTranslations(language);
-  const [allProducts, setAllProducts] = useState(FEATURED_PRODUCTS as any[]);
+  const [products, setProducts] = useState<any[]>(FEATURED_PRODUCTS);
 
   useEffect(() => {
-    productsApi.getFeatured(12).then((res) => {
-      if (res.data && res.data.length > 0) setAllProducts(res.data);
-    }).catch(() => {/* keep static fallback */});
-  }, []);
-
-  const filtered =
-    activeTab === 'all'
-      ? allProducts
-      : allProducts.filter((p) => p.category === activeTab);
+    if (activeTab === 'all') {
+      productsApi.getFeatured(12).then((res) => {
+        if (res.data && res.data.length > 0) setProducts(res.data);
+      }).catch(() => {/* fallback */});
+    } else {
+      productsApi.getAll({ category: activeTab, limit: 12 }).then((res) => {
+        if (res.data?.items && res.data.items.length > 0) {
+          setProducts(res.data.items);
+        } else {
+          setProducts([]);
+        }
+      }).catch(() => {/* fallback */});
+    }
+  }, [activeTab]);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
@@ -80,8 +85,8 @@ export const FeaturedProductsSection: React.FC = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {filtered.length > 0 ? (
-          filtered.map((product) => (
+        {products.length > 0 ? (
+          products.map((product) => (
             <ProductCard key={product.id || product._id} product={product} />
           ))
         ) : (

@@ -64,10 +64,11 @@ export class OrdersService {
     if (govRates[govKey] !== undefined) {
       shippingFee = govRates[govKey];
     } else {
+      const searchGov = data.governorate || '';
       const govDoc = await Governorate.findOne({
         $or: [
-          { nameEn: new RegExp(data.governorate, 'i') },
-          { nameAr: new RegExp(data.governorate, 'i') },
+          { nameEn: new RegExp(searchGov, 'i') },
+          { nameAr: new RegExp(searchGov, 'i') },
         ],
       });
       if (govDoc) {
