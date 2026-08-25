@@ -9,11 +9,16 @@ import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useThemeStore } from '../../lib/store/useThemeStore';
 import { useTranslations } from '../../lib/data/translations';
 import { ColorThemePicker } from './ColorThemePicker';
+import { productsApi } from '../../lib/api/apiClient';
+import { useRouter } from 'next/navigation';
 
 export const Navbar: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const toggleCart = useCartStore((state) => state.toggleCart);
@@ -26,6 +31,36 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      productsApi.autocomplete(searchQuery).then((res) => {
+        setSuggestions(res.data || []);
+        setShowSuggestions(true);
+      }).catch(() => {});
+    }, 280);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowSuggestions(false);
+      router.push(`/category/all?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleSuggestionClick = (product: any) => {
+    const id = product.id || product._id;
+    setShowSuggestions(false);
+    setSearchQuery('');
+    router.push(`/product/${id}`);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white transition-colors duration-300">
@@ -102,24 +137,56 @@ export const Navbar: React.FC = () => {
 
         {/* Search Bar */}
         <div className="flex-1 max-w-2xl relative hidden md:block">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder={t.searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700/80 rounded-xl py-2.5 ${
-                isArabic ? 'pr-4 pl-12' : 'pl-4 pr-12'
-              } text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all`}
-            />
-            <button
-              className={`absolute ${
-                isArabic ? 'left-2' : 'right-2'
-              } top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white hover:bg-brand-500 transition-colors`}
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </div>
+          <form onSubmit={handleSearch}>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={t.searchPlaceholder}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                className={`w-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700/80 rounded-xl py-2.5 ${
+                  isArabic ? 'pr-4 pl-12' : 'pl-4 pr-12'
+                } text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all`}
+              />
+              <button
+                type="submit"
+                className={`absolute ${
+                  isArabic ? 'left-2' : 'right-2'
+                } top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white hover:bg-brand-500 transition-colors`}
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
+          {/* Autocomplete Dropdown */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-full mt-2 left-0 right-0 z-50 bg-white dark:bg-[#0e1526] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+              {suggestions.map((s) => {
+                const sid = s.id || s._id;
+                return (
+                  <button
+                    key={sid}
+                    onMouseDown={() => handleSuggestionClick(s)}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
+                  >
+                    {s.image && (
+                      <img src={s.image} alt={s.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                        {isArabic && s.nameAr ? s.nameAr : s.name}
+                      </p>
+                      <p className="text-xs text-brand-500 font-bold">
+                        {s.price?.toLocaleString()} EGP
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Actions */}

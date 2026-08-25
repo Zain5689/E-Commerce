@@ -20,6 +20,8 @@ import { useCartStore } from '../../lib/store/useCartStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 import { POPULAR_CATEGORIES } from '../../lib/data/homeData';
+import { couponsApi, shippingApi } from '../../lib/api/apiClient';
+
 
 const FREE_SHIPPING_THRESHOLD = 10000;
 
@@ -36,13 +38,17 @@ export default function CartPage() {
 
   // Promo code state
   const [promoInput, setPromoInput] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
   const [discountPercent, setDiscountPercent] = useState<number>(0);
   const [promoMessage, setPromoMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Governorate shipping state
   const [selectedGov, setSelectedGov] = useState<string>('cairo');
+  const [govRates, setGovRates] = useState<Record<string, { fee: number; label: string }>>({});
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(10000);
 
-  const GOV_RATES: Record<string, { fee: number; label: string }> = {
+  // Default shipping rates (used until API loads)
+  const DEFAULT_GOV_RATES: Record<string, { fee: number; label: string }> = {
     cairo: { fee: 50, label: t.govCairo },
     giza: { fee: 50, label: t.govGiza },
     alex: { fee: 65, label: t.govAlex },
@@ -50,30 +56,45 @@ export default function CartPage() {
     upper: { fee: 95, label: t.govUpper },
   };
 
+  const GOV_RATES = Object.keys(govRates).length > 0 ? govRates : DEFAULT_GOV_RATES;
+
   useEffect(() => {
     setMounted(true);
+    // Load shipping rates from API
+    shippingApi.getGovernorates().then((res) => {
+      if (res.data?.governorates) {
+        const rates: Record<string, { fee: number; label: string }> = {};
+        res.data.governorates.forEach((g: any) => {
+          rates[g.key] = {
+            fee: g.fee,
+            label: isArabic ? g.nameAr : g.nameEn,
+          };
+        });
+        setGovRates(rates);
+        if (res.data.freeShippingThreshold) {
+          setFreeShippingThreshold(res.data.freeShippingThreshold);
+        }
+      }
+    }).catch(() => {/* keep defaults */});
   }, []);
 
-  const handleApplyPromo = (e: React.FormEvent) => {
+  const handleApplyPromo = async (e: React.FormEvent) => {
     e.preventDefault();
-    const code = promoInput.trim().toUpperCase();
-    if (code === 'NEXUS10' || code === 'EGYPT10') {
-      setDiscountPercent(10);
+    const code = promoInput.trim();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoMessage(null);
+    try {
+      const res = await couponsApi.validate(code, subtotal);
+      setDiscountPercent(res.data.discountPercent);
       setPromoMessage({
         type: 'success',
-        text: t.promoAppliedSuccess.replace('{percent}', '10'),
+        text: t.promoAppliedSuccess.replace('{percent}', String(res.data.discountPercent)),
       });
-    } else if (code === 'VIP15') {
-      setDiscountPercent(15);
-      setPromoMessage({
-        type: 'success',
-        text: t.promoAppliedSuccess.replace('{percent}', '15'),
-      });
-    } else {
-      setPromoMessage({
-        type: 'error',
-        text: t.promoInvalid,
-      });
+    } catch (err: any) {
+      setPromoMessage({ type: 'error', text: err.message || t.promoInvalid });
+    } finally {
+      setPromoLoading(false);
     }
   };
 
@@ -89,14 +110,14 @@ export default function CartPage() {
   }
 
   const subtotal = getSubtotal();
-  const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const isFreeShipping = subtotal >= freeShippingThreshold;
   const rawShipping = GOV_RATES[selectedGov]?.fee || 50;
   const shippingFee = isFreeShipping ? 0 : rawShipping;
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
   const grandTotal = Math.max(subtotal - discountAmount + shippingFee, 0);
 
-  const remainingForFreeShipping = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
-  const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const remainingForFreeShipping = Math.max(freeShippingThreshold - subtotal, 0);
+  const progressPercent = Math.min((subtotal / freeShippingThreshold) * 100, 100);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 min-h-[70vh]">
