@@ -10,13 +10,14 @@ import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 
 interface ProductCardProps {
-  product: Product;
+  product: Product & { _id?: string };
   showProgress?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress }) => {
+  const productId = product.id || (product as any)._id || '';
   const addItem = useCartStore((state) => state.addItem);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist(product.id));
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist(productId));
   const toggleWishlist = useWishlistStore((state) => state.toggleItem);
 
   const [added, setAdded] = useState(false);

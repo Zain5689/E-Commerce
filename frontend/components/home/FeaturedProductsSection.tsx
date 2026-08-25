@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Grid, Laptop, Cpu, Zap, Archive, Tv, Package } from 'lucide-react';
 import { FEATURED_PRODUCTS } from '../../lib/data/homeData';
 import { ProductCard } from '../store/ProductCard';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
+import { productsApi } from '../../lib/api/apiClient';
 
 type TabId = 'all' | 'laptops' | 'pc-builds' | 'gpus' | 'used' | 'monitors' | 'audio';
 
@@ -24,11 +25,18 @@ export const FeaturedProductsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('all');
   const { language } = useLanguageStore();
   const t = useTranslations(language);
+  const [allProducts, setAllProducts] = useState(FEATURED_PRODUCTS as any[]);
+
+  useEffect(() => {
+    productsApi.getFeatured(12).then((res) => {
+      if (res.data && res.data.length > 0) setAllProducts(res.data);
+    }).catch(() => {/* keep static fallback */});
+  }, []);
 
   const filtered =
     activeTab === 'all'
-      ? FEATURED_PRODUCTS
-      : FEATURED_PRODUCTS.filter((p) => p.category === activeTab);
+      ? allProducts
+      : allProducts.filter((p) => p.category === activeTab);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
@@ -74,7 +82,7 @@ export const FeaturedProductsSection: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filtered.length > 0 ? (
           filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id || product._id} product={product} />
           ))
         ) : (
           <div className="col-span-full text-center py-10 text-slate-500 text-sm">
