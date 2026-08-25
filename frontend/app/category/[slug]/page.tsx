@@ -1,14 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { SpecsFilterSidebar, FilterOption } from '../../../components/store/SpecsFilterSidebar';
 import { ProductCard } from '../../../components/store/ProductCard';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useLanguageStore } from '../../../lib/store/useLanguageStore';
 import { useTranslations } from '../../../lib/data/translations';
 import { FLASH_DEALS, FEATURED_PRODUCTS } from '../../../lib/data/homeData';
+import { productsApi } from '../../../lib/api/apiClient';
 
 const CATEGORY_NAMES_EN: Record<string, string> = {
   'laptops': 'Laptops & Notebooks',
@@ -20,6 +21,8 @@ const CATEGORY_NAMES_EN: Record<string, string> = {
   'used': 'Certified Used & Refurbished',
   'audio': 'Smart Audio & Security Systems',
   'cctv': 'CCTV & Smart Security',
+  'pc-builds': 'Custom PC Builds',
+  'accessories': 'Accessories & Peripherals',
 };
 
 const CATEGORY_NAMES_AR: Record<string, string> = {
@@ -32,6 +35,8 @@ const CATEGORY_NAMES_AR: Record<string, string> = {
   'used': 'استيراد فرز أول كسر زيرو',
   'audio': 'صوتيات ذكية وأنظمة أمان',
   'cctv': 'كاميرات مراقبة وكوالين ذكية',
+  'pc-builds': 'تجميعات كمبيوتر احترافية',
+  'accessories': 'ملحقات وإكسسوارات',
 };
 
 const FILTER_OPTIONS: FilterOption[] = [
@@ -55,23 +60,48 @@ const FILTER_OPTIONS: FilterOption[] = [
   },
 ];
 
+const STATIC_PRODUCTS = [...FLASH_DEALS, ...FEATURED_PRODUCTS] as any[];
+
 export default function CategoryPage() {
   const params = useParams();
   const slug = (params?.slug as string) || 'laptops';
-  
+
   const { language, isArabic } = useLanguageStore();
   const t = useTranslations(language);
+
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
 
   const categoryTitle = isArabic
     ? CATEGORY_NAMES_AR[slug] || slug
     : CATEGORY_NAMES_EN[slug] || slug.replace('-', ' ').toUpperCase();
 
-  // Combine products for display
-  const allProducts = [...FLASH_DEALS, ...FEATURED_PRODUCTS];
-  const filteredProducts = allProducts.filter(
-    (p) => p.category === slug || slug === 'all'
-  );
-  const productsToDisplay = filteredProducts.length > 0 ? filteredProducts : allProducts;
+  useEffect(() => {
+    setLoading(true);
+    const params: Record<string, any> = { limit: 48 };
+    if (slug !== 'all') params.category = slug;
+
+    productsApi.getAll(params)
+      .then((res) => {
+        const items = res.data?.items || [];
+        if (items.length > 0) {
+          setProducts(items);
+          setTotalCount(res.data?.meta?.total || items.length);
+        } else {
+          // fallback to static
+          const filtered = STATIC_PRODUCTS.filter((p) => p.category === slug || slug === 'all');
+          setProducts(filtered.length > 0 ? filtered : STATIC_PRODUCTS);
+          setTotalCount(filtered.length > 0 ? filtered.length : STATIC_PRODUCTS.length);
+        }
+      })
+      .catch(() => {
+        const filtered = STATIC_PRODUCTS.filter((p) => p.category === slug || slug === 'all');
+        setProducts(filtered.length > 0 ? filtered : STATIC_PRODUCTS);
+        setTotalCount(filtered.length > 0 ? filtered.length : STATIC_PRODUCTS.length);
+      })
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -90,7 +120,9 @@ export default function CategoryPage() {
               {categoryTitle}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {t.showingProducts.replace('{count}', String(productsToDisplay.length))}
+              {loading
+                ? (isArabic ? 'جاري التحميل...' : 'Loading...')
+                : t.showingProducts.replace('{count}', String(totalCount))}
             </p>
           </div>
         </div>
@@ -108,11 +140,17 @@ export default function CategoryPage() {
 
         {/* Product Grid */}
         <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {productsToDisplay.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center h-60">
+              <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id || product._id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
