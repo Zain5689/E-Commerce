@@ -28,18 +28,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   const productName = isArabic && product.nameAr ? product.nameAr : product.name;
   const productSpecs = isArabic && product.specsAr ? product.specsAr : product.specs;
   const productBadge = isArabic && product.badgeAr ? product.badgeAr : product.badge;
-  const productUrl = `/product/${product.id}`;
+  const productUrl = `/product/${productId}`;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
-      productId: product.id,
+      productId,
       name: productName,
       price: product.price,
       image: product.image,
       quantity: 1,
-      sku: product.sku || product.id,
+      sku: product.sku || productId,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -48,7 +48,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, showProgress 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product);
+    toggleWishlist({ ...product, id: productId });
   };
 
   const discountPercent = Math.round(

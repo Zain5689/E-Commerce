@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Home, ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Home, ChevronRight, ChevronLeft, AlertCircle, Loader2 } from 'lucide-react';
 import { getProductById } from '../../../lib/data/homeData';
+import { productsApi } from '../../../lib/api/apiClient';
 import { ProductGallery } from '../../../components/product/ProductGallery';
 import { ProductBuyBox } from '../../../components/product/ProductBuyBox';
 import { ProductTabs } from '../../../components/product/ProductTabs';
@@ -42,7 +43,41 @@ export default function ProductDetailPage() {
   const { language, isArabic } = useLanguageStore();
   const t = useTranslations(language);
 
-  const product = getProductById(id);
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+
+    // Try API first, fall back to static data
+    productsApi.getById(id)
+      .then((res) => {
+        if (res.data) {
+          // Normalize _id to id for components
+          const p = res.data;
+          if (!p.id && p._id) p.id = p._id;
+          setProduct(p);
+        } else {
+          setProduct(getProductById(id) || null);
+        }
+      })
+      .catch(() => {
+        setProduct(getProductById(id) || null);
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-4">
+        <Loader2 className="w-10 h-10 mx-auto text-brand-500 animate-spin" />
+        <p className="text-sm text-slate-400">
+          {isArabic ? 'جاري تحميل المنتج...' : 'Loading product...'}
+        </p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
