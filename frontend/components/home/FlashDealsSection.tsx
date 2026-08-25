@@ -7,6 +7,8 @@ import { FLASH_DEALS } from '../../lib/data/homeData';
 import { ProductCard } from '../store/ProductCard';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
+import { productsApi } from '../../lib/api/apiClient';
+
 
 function useCountdown(targetHours = 6) {
   const [timeLeft, setTimeLeft] = useState({ h: targetHours, m: 0, s: 0 });
