@@ -20,7 +20,8 @@ import { useCartStore } from '../../lib/store/useCartStore';
 import { useLanguageStore } from '../../lib/store/useLanguageStore';
 import { useTranslations } from '../../lib/data/translations';
 import { POPULAR_CATEGORIES } from '../../lib/data/homeData';
-import { couponsApi, shippingApi } from '../../lib/api/apiClient';
+import { couponsApi, shippingApi, ordersApi } from '../../lib/api/apiClient';
+import { useRouter } from 'next/navigation';
 
 
 const FREE_SHIPPING_THRESHOLD = 10000;
@@ -46,6 +47,17 @@ export default function CartPage() {
   const [selectedGov, setSelectedGov] = useState<string>('cairo');
   const [govRates, setGovRates] = useState<Record<string, { fee: number; label: string }>>({});
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(10000);
+
+  // Checkout modal state
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+  const [customerNotes, setCustomerNotes] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'COD' | 'CARD'>('COD');
+  const [placingOrder, setPlacingOrder] = useState(false);
+  const [createdOrder, setCreatedOrder] = useState<any | null>(null);
+  const router = useRouter();
 
   // Default shipping rates (used until API loads)
   const DEFAULT_GOV_RATES: Record<string, { fee: number; label: string }> = {
@@ -95,6 +107,44 @@ export default function CartPage() {
       setPromoMessage({ type: 'error', text: err.message || t.promoInvalid });
     } finally {
       setPromoLoading(false);
+    }
+  };
+
+  const handlePlaceOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customerName || !customerPhone || !customerAddress) {
+      alert(isArabic ? 'يرجى إدخال جميع بيانات الشحن المطلوبة' : 'Please fill out all required shipping fields');
+      return;
+    }
+    setPlacingOrder(true);
+    try {
+      const orderData = {
+        items: items.map((i) => ({
+          productId: i.productId,
+          quantity: i.quantity,
+          price: i.price,
+        })),
+        shippingAddress: {
+          title: 'Delivery Address',
+          name: customerName,
+          phone: customerPhone,
+          city: GOV_RATES[selectedGov]?.label || selectedGov,
+          address: customerAddress,
+        },
+        shippingFee,
+        discountAmount,
+        couponCode: discountPercent > 0 ? promoInput.trim() : undefined,
+        paymentMethod,
+        notes: customerNotes,
+      };
+
+      const res = await ordersApi.create(orderData);
+      setCreatedOrder(res.data);
+      clearCart();
+    } catch (err: any) {
+      alert(err.message || 'Failed to place order. Please try again.');
+    } finally {
+      setPlacingOrder(false);
     }
   };
 
@@ -419,7 +469,7 @@ export default function CartPage() {
 
               {/* Checkout CTA */}
               <button
-                onClick={() => alert(isArabic ? 'جاري الانتقال لصفحة إتمام الطلب وتحديد عنوان التوصيل والدفع...' : 'Proceeding to Checkout page...')}
+                onClick={() => setShowCheckoutModal(true)}
                 className="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-brand-600/30 flex items-center justify-center gap-2 text-sm active:scale-98"
               >
                 <span>{t.checkoutBtn}</span>
@@ -441,6 +491,138 @@ export default function CartPage() {
           </div>
         </div>
       )}
+
+      {/* CHECKOUT MODAL */}
+      {showCheckoutModal && !createdOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowCheckoutModal(false)}
+              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            >
+              ✕
+            </button>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white">
+              {isArabic ? 'إتمام طلب الشراء' : 'Complete Your Order'}
+            </h3>
+            <form onSubmit={handlePlaceOrder} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  {isArabic ? 'الاسم بالكامل' : 'Full Name'}
+                </label>
+                <input
+                  type="text" required placeholder={isArabic ? 'أدخل اسمك بالكامل' : 'Enter your full name'}
+                  value={customerName} onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  {isArabic ? 'رقم الهاتف' : 'Phone Number'}
+                </label>
+                <input
+                  type="tel" required placeholder="01xxxxxxxxx"
+                  value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white font-mono"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  {isArabic ? 'العنوان التفصيلي' : 'Detailed Shipping Address'}
+                </label>
+                <textarea
+                  required placeholder={isArabic ? 'المنطقة - اسم الشارع - رقم المبنى - الشقة' : 'Building no., Street, Area'}
+                  value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-900 dark:text-white h-20"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  {isArabic ? 'طريقة الدفع' : 'Payment Method'}
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button" onClick={() => setPaymentMethod('COD')}
+                    className={`p-3 rounded-xl border text-xs font-bold text-center transition-all ${
+                      paymentMethod === 'COD'
+                        ? 'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-400'
+                        : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    {isArabic ? 'الدفع عند الاستلام (Cash on Delivery)' : 'Cash on Delivery (COD)'}
+                  </button>
+                  <button
+                    type="button" onClick={() => setPaymentMethod('CARD')}
+                    className={`p-3 rounded-xl border text-xs font-bold text-center transition-all ${
+                      paymentMethod === 'CARD'
+                        ? 'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-400'
+                        : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    {isArabic ? 'بطاقة ائتمانية / فيزا (Card)' : 'Credit / Debit Card'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-3 flex justify-between items-center text-xs">
+                <span className="font-bold text-slate-900 dark:text-white">{isArabic ? 'المبلغ الإجمالي:' : 'Total Amount:'}</span>
+                <span className="font-mono font-black text-brand-600 dark:text-brand-400 text-base">
+                  {grandTotal.toLocaleString()} {t.currency}
+                </span>
+              </div>
+
+              <button
+                type="submit" disabled={placingOrder}
+                className="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-brand-600/30 active:scale-98 disabled:opacity-60"
+              >
+                {placingOrder
+                  ? (isArabic ? 'جاري تأكيد الطلب...' : 'Placing Order...')
+                  : (isArabic ? 'تأكيد وإرسال الطلب الان' : 'Confirm & Place Order')}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* SUCCESS CONFIRMATION OVERLAY */}
+      {createdOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-8 text-center space-y-5 shadow-2xl">
+            <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 mx-auto flex items-center justify-center border border-emerald-500/40">
+              <CheckCircle2 className="w-8 h-8 animate-bounce" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">
+                {isArabic ? 'تم استلام طلبك بنجاح! 🎉' : 'Order Placed Successfully! 🎉'}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {isArabic ? 'رقم الطلب الخاص بك هو:' : 'Your Order Reference:'}
+              </p>
+              <p className="text-lg font-mono font-black text-brand-600 dark:text-brand-400">
+                #{createdOrder.orderNumber || createdOrder._id || createdOrder.id}
+              </p>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Link
+                href="/account"
+                className="flex-1 bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl text-xs transition-all shadow"
+              >
+                {isArabic ? 'تتبع طلباتك' : 'Track Orders'}
+              </Link>
+              <Link
+                href="/"
+                className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold py-3 rounded-xl text-xs transition-all"
+              >
+                {isArabic ? 'الرئيسية' : 'Back to Home'}
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
